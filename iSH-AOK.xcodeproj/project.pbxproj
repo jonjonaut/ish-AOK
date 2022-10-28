@@ -1952,7 +1952,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp /Users/mke/git/iSH-AOK/root.tar.gz \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/root.tar.gz\"\n";
+			shellScript = "cp /Users/jasonconway/Documents/Xcode/aok/root.tar.gz \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/root.tar.gz\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BBFB2C572590257E00545EAB /* ShellScript */ = {
@@ -2279,15 +2279,18 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "fs/proc/MakeXcodeAutoCompleteWork-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2299,15 +2302,18 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "fs/proc/MakeXcodeAutoCompleteWork-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2317,11 +2323,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
@@ -2332,11 +2339,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
@@ -2424,7 +2432,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2444,7 +2452,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2502,13 +2510,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2.4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
@@ -2528,13 +2536,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2.4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
@@ -2563,13 +2571,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2.4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
@@ -2587,8 +2595,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -2611,9 +2619,9 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok.FileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2626,7 +2634,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2683,15 +2691,18 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "fs/proc/MakeXcodeAutoCompleteWork-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2702,11 +2713,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
@@ -2721,9 +2733,9 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok.FileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2739,9 +2751,9 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok.FileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2842,8 +2854,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -2856,8 +2868,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -2883,13 +2895,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2.4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
@@ -2906,8 +2918,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -2930,9 +2942,9 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 420;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok.FileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2945,7 +2957,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3001,15 +3013,18 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "fs/proc/MakeXcodeAutoCompleteWork-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
@@ -3019,11 +3034,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
+				PRODUCT_BUNDLE_IDENTIFIER = app.jpc.aok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
