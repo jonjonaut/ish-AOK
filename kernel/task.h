@@ -228,14 +228,14 @@ void extra_unlockf(dword_t pid, __attribute__((unused)) const char *file, __attr
 // of functions which can block the task, we mark our task as blocked and
 // unblock it after the function is executed.
 __attribute__((always_inline)) inline int task_may_block_start(void) {
-    modify_critical_region_counter_wrapper(1, __FILE__, __LINE__);
+//    modify_critical_region_counter_wrapper(1, __FILE__, __LINE__);
     current->io_block = 1;
     return 0;
 }
 
 __attribute__((always_inline)) inline int task_may_block_end(void) {
     current->io_block = 0;
-    modify_critical_region_counter_wrapper(-1, __FILE__, __LINE__);
+//    modify_critical_region_counter_wrapper(-1, __FILE__, __LINE__);
     return 0;
 }
 

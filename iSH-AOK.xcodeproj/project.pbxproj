@@ -198,7 +198,7 @@
 		BBD23D5F258DA450003DCB40 /* Screenshots.m in Sources */ = {isa = PBXBuildFile; fileRef = BBD23D5E258DA450003DCB40 /* Screenshots.m */; };
 		BBD23D77258DA4BC003DCB40 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD23D76258DA4BC003DCB40 /* SnapshotHelper.swift */; };
 		BBECF3AD269132F400DEC937 /* LinuxInterop.c in Sources */ = {isa = PBXBuildFile; fileRef = BBECF39D2691313B00DEC937 /* LinuxInterop.c */; };
-		BBECF3AE2691330F00DEC937 /* libiSH-AOKLinux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BBECF3A22691314C00DEC937 /* libiSH-AOKLinux.a */; };
+		BBECF3AE2691330F00DEC937 /* libiSHLinux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BBECF3A22691314C00DEC937 /* libiSHLinux.a */; };
 		BBECF3B9269136FB00DEC937 /* liblinux.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BBECF3B8269136E100DEC937 /* liblinux.a */; };
 		BBECF3BC26913F1600DEC937 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BB792B541F96D90D00FFB7A4 /* AppDelegate.m */; };
 		BBEEA9E8277D25090069495B /* LinuxRoot.c in Sources */ = {isa = PBXBuildFile; fileRef = BBEEA9E7277D25090069495B /* LinuxRoot.c */; };
@@ -699,7 +699,7 @@
 		BBD23D95258DEF6B003DCB40 /* Screenshots.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Screenshots.xctestplan; sourceTree = "<group>"; };
 		BBECF39B2691311D00DEC937 /* LinuxInterop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinuxInterop.h; sourceTree = "<group>"; };
 		BBECF39D2691313B00DEC937 /* LinuxInterop.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = LinuxInterop.c; sourceTree = "<group>"; };
-		BBECF3A22691314C00DEC937 /* libiSH-AOKLinux.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libiSH-AOKLinux.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBECF3A22691314C00DEC937 /* libiSHLinux.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSHLinux.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBECF3B8269136E100DEC937 /* liblinux.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblinux.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBECF3BA2691379100DEC937 /* StaticLibLinux.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StaticLibLinux.xcconfig; sourceTree = "<group>"; };
 		BBEEA9E7277D25090069495B /* LinuxRoot.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = LinuxRoot.c; sourceTree = "<group>"; };
@@ -769,7 +769,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBECF3B9269136FB00DEC937 /* liblinux.a in Frameworks */,
-				BBECF3AE2691330F00DEC937 /* libiSH-AOKLinux.a in Frameworks */,
+				BBECF3AE2691330F00DEC937 /* libiSHLinux.a in Frameworks */,
 				BBEF1970268066D1001225BD /* libiSH-AOKApp.a in Frameworks */,
 				BBBD741426B7BE2E00321AC5 /* libfakefs.a in Frameworks */,
 				BBEF1972268066D1001225BD /* libish_emu.a in Frameworks */,
@@ -1014,7 +1014,7 @@
 				BBEF191E26806364001225BD /* libiSH-AOKApp.a */,
 				BBEF199C268066D1001225BD /* iSH-AOK.app */,
 				BB21A16F2689041500BD19B4 /* libfakefs.a */,
-				BBECF3A22691314C00DEC937 /* libiSH-AOKLinux.a */,
+				BBECF3A22691314C00DEC937 /* libiSHLinux.a */,
 				BBECF3B8269136E100DEC937 /* liblinux.a */,
 			);
 			name = Products;
@@ -1489,9 +1489,9 @@
 			productReference = BB88F4902154760800A341FD /* iSH-AOK.FileProvider.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		BBECF3A12691314C00DEC937 /* libiSH-AOKLinux */ = {
+		BBECF3A12691314C00DEC937 /* libiSHLinux */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BBECF3A82691314C00DEC937 /* Build configuration list for PBXNativeTarget "libiSH-AOKLinux" */;
+			buildConfigurationList = BBECF3A82691314C00DEC937 /* Build configuration list for PBXNativeTarget "libiSHLinux" */;
 			buildPhases = (
 				BBECF39E2691314C00DEC937 /* Sources */,
 			);
@@ -1500,9 +1500,9 @@
 			dependencies = (
 				BBECF3BE2691417C00DEC937 /* PBXTargetDependency */,
 			);
-			name = "libiSH-AOKLinux";
+			name = libiSHLinux;
 			productName = iSHLinux;
-			productReference = BBECF3A22691314C00DEC937 /* libiSH-AOKLinux.a */;
+			productReference = BBECF3A22691314C00DEC937 /* libiSHLinux.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		BBECF3AF269136E100DEC937 /* liblinux */ = {
@@ -1662,7 +1662,7 @@
 				BB792B4F1F96D90D00FFB7A4 /* iSH-AOK */,
 				BBEF191D26806364001225BD /* libiSH-AOKApp */,
 				BBEF1964268066D1001225BD /* iSH-AOK+Linux */,
-				BBECF3A12691314C00DEC937 /* libiSH-AOKLinux */,
+				BBECF3A12691314C00DEC937 /* libiSHLinux */,
 				BB88F48F2154760800A341FD /* iSH-AOK.FileProvider */,
 				BB41591B255EF9E300E0950C /* iSH-AOKUITests */,
 				BB13F7CA200ACC31003D1C4D /* Meson */,
@@ -1875,6 +1875,7 @@
 		};
 		BBECF3B2269136E100DEC937 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -2759,7 +2760,7 @@
 			baseConfigurationReference = BBECF3BA2691379100DEC937 /* StaticLibLinux.xcconfig */;
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
-				PRODUCT_NAME = "libiSH-AOKLinux";
+				PRODUCT_NAME = libiSHLinux;
 			};
 			name = "Debug-ApplePleaseFixFB19282108";
 		};
@@ -2768,7 +2769,7 @@
 			baseConfigurationReference = BBECF3BA2691379100DEC937 /* StaticLibLinux.xcconfig */;
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
-				PRODUCT_NAME = "libiSH-AOKLinux";
+				PRODUCT_NAME = libiSHLinux;
 			};
 			name = DebugLinux;
 		};
@@ -2777,7 +2778,7 @@
 			baseConfigurationReference = BBECF3BA2691379100DEC937 /* StaticLibLinux.xcconfig */;
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
-				PRODUCT_NAME = "libiSH-AOKLinux";
+				PRODUCT_NAME = libiSHLinux;
 			};
 			name = Release;
 		};
@@ -2786,7 +2787,7 @@
 			baseConfigurationReference = BBECF3BA2691379100DEC937 /* StaticLibLinux.xcconfig */;
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
-				PRODUCT_NAME = "libiSH-AOKLinux";
+				PRODUCT_NAME = libiSHLinux;
 			};
 			name = ReleaseLinux;
 		};
@@ -3176,7 +3177,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BBECF3A82691314C00DEC937 /* Build configuration list for PBXNativeTarget "libiSH-AOKLinux" */ = {
+		BBECF3A82691314C00DEC937 /* Build configuration list for PBXNativeTarget "libiSHLinux" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BBECF3A92691314C00DEC937 /* Debug-ApplePleaseFixFB19282108 */,

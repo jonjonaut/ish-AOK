@@ -7,8 +7,6 @@
 #include "emu/memory.h"
 #include "emu/interrupt.h"
 #include "util/list.h"
-#include "kernel/task.h"
-#include "kernel/resource_locking.h"
 
 extern int current_pid(void);
 
@@ -38,10 +36,8 @@ void jit_free(struct jit *jit) {
         }
     }
     jit_free_jetsam(jit);
-    unlock(&jit->lock);
     free(jit->page_hash);
     free(jit->hash);
-    write_lock(&jit->jetsam_lock);
     free(jit);
 }
 
@@ -51,7 +47,7 @@ static inline struct list *blocks_list(struct jit *jit, page_t page, int i) {
 }
 
 void jit_invalidate_range(struct jit *jit, page_t start, page_t end) {
-    lock(&jit->lock, 0);
+    lock(&jit->lock);
     struct jit_block *block, *tmp;
     for (page_t page = start; page < end; page++) {
         for (int i = 0; i <= 1; i++) {
@@ -69,15 +65,8 @@ void jit_invalidate_range(struct jit *jit, page_t start, page_t end) {
 }
 
 void jit_invalidate_page(struct jit *jit, page_t page) {
-    while(critical_region_count(current) > 4) { // It's all a bit magic, but I think this is doing something useful.  -mke
-        nanosleep(&lock_pause, NULL);
-    }
-    
-    //modify_critical_region_counter(current, 1, __FILE__, __LINE__);
     jit_invalidate_range(jit, page, page + 1);
-    //modify_critical_region_counter(current, -1, __FILE__, __LINE__);
 }
-
 void jit_invalidate_all(struct jit *jit) {
     jit_invalidate_range(jit, 0, MEM_PAGES);
 }
@@ -127,7 +116,6 @@ static struct jit_block *jit_lookup(struct jit *jit, addr_t addr) {
 static struct jit_block *jit_block_compile(addr_t ip, struct tlb *tlb) {
     struct gen_state state;
     TRACE("%d %08x --- compiling:\n", current_pid(), ip);
-    
     gen_start(ip, &state);
     while (true) {
         if (!gen_step(&state, tlb))
@@ -157,39 +145,24 @@ static void jit_block_disconnect(struct jit *jit, struct jit_block *block) {
     }
     list_remove(&block->chain);
     for (int i = 0; i <= 1; i++) {
-        ////modify_critical_region_counter(current, 1, __FILE__, __LINE__);
         list_remove(&block->page[i]);
         list_remove_safe(&block->jumps_from_links[i]);
-        ////modify_critical_region_counter(current, -1, __FILE__, __LINE__);
 
         struct jit_block *prev_block, *tmp;
-        
-        ////modify_critical_region_counter(current, 1, __FILE__, __LINE__);
         list_for_each_entry_safe(&block->jumps_from[i], prev_block, tmp, jumps_from_links[i]) {
             if (prev_block->jump_ip[i] != NULL)
-                *prev_block->jump_ip[i] = prev_block->old_jump_ip[i]; // Crashed here June 12 2022
+                *prev_block->jump_ip[i] = prev_block->old_jump_ip[i];
             list_remove(&prev_block->jumps_from_links[i]);
         }
-        
-        ////modify_critical_region_counter(current, -1, __FILE__, __LINE__);
     }
 }
 
 static void jit_block_free(struct jit *jit, struct jit_block *block) {
-   // critical_region_count_increase(current);
     jit_block_disconnect(jit, block);
     free(block);
-    //critical_region_count_decrease(current);
 }
 
 static void jit_free_jetsam(struct jit *jit) {
-   /* if(!strcmp(current->comm, "go")) {
-        // Sleep for a bit if this is go.  Kludge alert.  -mke
-        struct timespec wait;
-        wait.tv_sec = 3; // Be anal and set both to zero.  -mke
-        wait.tv_nsec = 0;
-        nanosleep(&wait, NULL);
-    } */
     struct jit_block *block, *tmp;
     list_for_each_entry_safe(&jit->jetsam, block, tmp, jetsam) {
         list_remove(&block->jetsam);
@@ -205,7 +178,7 @@ static inline size_t jit_cache_hash(addr_t ip) {
 
 static int cpu_step_to_interrupt(struct cpu_state *cpu, struct tlb *tlb) {
     struct jit *jit = cpu->mmu->jit;
-    read_lock(&jit->jetsam_lock, __FILE__, __LINE__);
+    read_wrlock(&jit->jetsam_lock);
 
     struct jit_block **cache = calloc(JIT_CACHE_SIZE, sizeof(*cache));
     struct jit_frame *frame = malloc(sizeof(struct jit_frame));
@@ -218,9 +191,8 @@ static int cpu_step_to_interrupt(struct cpu_state *cpu, struct tlb *tlb) {
         addr_t ip = frame->cpu.eip;
         size_t cache_index = jit_cache_hash(ip);
         struct jit_block *block = cache[cache_index];
-        //////modify_critical_region_counter(current, 1, __FILE__, __LINE__);
         if (block == NULL || block->addr != ip) {
-            lock(&jit->lock, 0);
+            lock(&jit->lock);
             block = jit_lookup(jit, ip);
             if (block == NULL) {
                 block = jit_block_compile(ip, tlb);
@@ -231,12 +203,11 @@ static int cpu_step_to_interrupt(struct cpu_state *cpu, struct tlb *tlb) {
             cache[cache_index] = block;
             unlock(&jit->lock);
         }
-        //////modify_critical_region_counter(current, -1, __FILE__, __LINE__);
         struct jit_block *last_block = frame->last_block;
         if (last_block != NULL &&
                 (last_block->jump_ip[0] != NULL ||
                  last_block->jump_ip[1] != NULL)) {
-            lock(&jit->lock, 0);
+            lock(&jit->lock);
             // can't mint new pointers to a block that has been marked jetsam
             // and is thus assumed to have no pointers left
             if (!last_block->is_jetsam && !block->is_jetsam) {
@@ -244,18 +215,13 @@ static int cpu_step_to_interrupt(struct cpu_state *cpu, struct tlb *tlb) {
                     if (last_block->jump_ip[i] != NULL &&
                             (*last_block->jump_ip[i] & 0xffffffff) == block->addr) {
                         *last_block->jump_ip[i] = (unsigned long) block->code;
-			//modify_critical_region_counter(current, 1, __FILE__, __LINE__);
                         list_add(&block->jumps_from[i], &last_block->jumps_from_links[i]);
-			//modify_critical_region_counter(current, -1, __FILE__, __LINE__);
                     }
                 }
             }
 
             unlock(&jit->lock);
         }
-        
-        //////modify_critical_region_counter(current, -1, __FILE__, __LINE__);
-        
         frame->last_block = block;
 
         // block may be jetsam, but that's ok, because it can't be freed until
@@ -273,9 +239,8 @@ static int cpu_step_to_interrupt(struct cpu_state *cpu, struct tlb *tlb) {
 
     free(frame);
     free(cache);
-    read_unlock(&jit->jetsam_lock, __FILE__, __LINE__);
+    read_wrunlock(&jit->jetsam_lock);
     return interrupt;
-
 }
 
 static int cpu_single_step(struct cpu_state *cpu, struct tlb *tlb) {
@@ -299,27 +264,22 @@ int cpu_run_to_interrupt(struct cpu_state *cpu, struct tlb *tlb) {
     if (cpu->poked_ptr == NULL)
         cpu->poked_ptr = &cpu->_poked;
     tlb_refresh(tlb, cpu->mmu);
-    //////modify_critical_region_counter(current, 1);
-    int interrupt = (cpu->tf ? cpu_single_step : cpu_step_to_interrupt)(cpu, tlb); // Crashed here 26 Jul 2022, 27 Aug 2022. -mke
+    int interrupt = (cpu->tf ? cpu_single_step : cpu_step_to_interrupt)(cpu, tlb);
     cpu->trapno = interrupt;
 
     struct jit *jit = cpu->mmu->jit;
-    lock(&jit->lock, 0);
+    lock(&jit->lock);
     if (!list_empty(&jit->jetsam)) {
         // write-lock the jetsam_lock to wait until other jit threads get to
         // this point, so they will all clear out their block pointers
         // TODO: use RCU for better performance
         unlock(&jit->lock);
-        write_lock(&jit->jetsam_lock);
-        lock(&jit->lock, 0);
-        while(critical_region_count(current) > 3) {// Yes, this is weird.  It might not work, but I'm trying.  -mke
-            nanosleep(&lock_pause, NULL);          // Yes, this has triggered at least once.  Is it doing any good though? -mke
-        }
+        write_wrlock(&jit->jetsam_lock);
+        lock(&jit->lock);
         jit_free_jetsam(jit);
-        write_unlock(&jit->jetsam_lock, __FILE__, __LINE__);
+        write_wrunlock(&jit->jetsam_lock);
     }
     unlock(&jit->lock);
-    //////modify_critical_region_counter(current, -1);
 
     return interrupt;
 }

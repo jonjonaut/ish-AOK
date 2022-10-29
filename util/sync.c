@@ -4,9 +4,6 @@
 #include "util/sync.h"
 #include "debug.h"
 #include "kernel/errno.h"
-#include <string.h>
-
-int noprintk = 0; // Used to suprress calls to printk.  -mke
 
 void cond_init(cond_t *cond) {
     pthread_condattr_t attr;
@@ -24,7 +21,7 @@ static bool is_signal_pending(lock_t *lock) {
     if (!current)
         return false;
     if (lock != &current->sighand->lock)
-        lock(&current->sighand->lock, 0);
+        lock(&current->sighand->lock);
     bool pending = !!(current->pending & ~current->blocked);
     if (lock != &current->sighand->lock)
         unlock(&current->sighand->lock);
@@ -44,29 +41,18 @@ int wait_for(cond_t *cond, lock_t *lock, struct timespec *timeout) {
 
 int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout) {
     if (current) {
-        lock(&current->waiting_cond_lock, 0);
+        lock(&current->waiting_cond_lock);
         current->waiting_cond = cond;
         current->waiting_lock = lock;
         unlock(&current->waiting_cond_lock);
     }
-        
     int rc = 0;
 #if LOCK_DEBUG
     struct lock_debug lock_tmp = lock->debug;
     lock->debug = (struct lock_debug) { .initialized = lock->debug.initialized };
 #endif
     if (!timeout) {
-        //rc = pthread_cond_timedwait_relative_np(&cond->cond, &lock->m, timeout);
-        if(lock->pid == -1) {  // Something has gone wrong.  -mke
-            lock(&current->waiting_cond_lock, 0);
-            current->waiting_cond = NULL;
-            current->waiting_lock = NULL;
-            unlock(&current->waiting_cond_lock);
-            return _ETIMEDOUT;
-            // Weird
-        }
-            
-        pthread_cond_wait(&cond->cond, &lock->m);// Sometimes things get stuck here for some reason.  -mke
+        pthread_cond_wait(&cond->cond, &lock->m);
     } else {
 #if __linux__
         struct timespec abs_timeout;
@@ -89,7 +75,7 @@ int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout
 #endif
 
     if (current) {
-        lock(&current->waiting_cond_lock, 0);
+        lock(&current->waiting_cond_lock);
         current->waiting_cond = NULL;
         current->waiting_lock = NULL;
         unlock(&current->waiting_cond_lock);
@@ -116,101 +102,6 @@ void sigusr1_handler() {
     }
 }
 
-// Because sometimes we can't #include "kernel/task.h" -mke
-unsigned critical_region_count(struct task *task) {
-    unsigned tmp = 0;
-//    pthread_mutex_lock(task->critical_region.lock); // This would make more
-    tmp = task->critical_region.count;
- //   pthread_mutex_unlock(task->critical_region.lock);
-
-    return tmp;
-}
-
-unsigned critical_region_count_wrapper() { // sync.h can't know about the definition of struct due to recursive include files.  -mke
-    return(critical_region_count(current));
-}
-unsigned locks_held_count(struct task *task) {
-   // return 0; // Short circuit for now
-    if(task->pid < 10)  // Here be monsters.  -mke
-        return 0;
-    if(task->locks_held.count > 0) {
-        return(task->locks_held.count -1);
-    }
-    unsigned tmp = 0;
-    pthread_mutex_lock(&task->locks_held.lock);
-    tmp = task->locks_held.count;
-    pthread_mutex_unlock(&task->locks_held.lock);
-
-    return tmp;
-}
-
-unsigned locks_held_count_wrapper() { // sync.h can't know about the definition of struct due to recursive include files.  -mke
-    if(current != NULL)
-        return(locks_held_count(current));
-    return 0;
-}
-
-void modify_critical_region_counter(struct task *task, int value, __attribute__((unused)) const char *file, __attribute__((unused)) int line) { // value Should only be -1 or 1.  -mke
-    if(task == NULL) {
-        if(current != NULL) {
-            task = current;
-        } else {
-            return;
-        }
-    } else if(task->exiting) { // Don't mess with tasks that are exiting.  -mke
-        return;
-    }
-    
-    pthread_mutex_lock(&task->critical_region.lock);
-    
-    if(!task->critical_region.count && (value < 0)) { // Prevent our unsigned value attempting to go negative.  -mke
-        //int skipme = strcmp(task->comm, "init");
-        //if((task->pid > 2) && (skipme != 0))  // Why ask why?  -mke
-        printk("ERROR: Attempt to decrement critical_region count when it is already zero, ignoring(%s:%d) (%s:%d)\n", task->comm, task->pid, file, line);
-        return;
-    }
-    
-    
-    if((strcmp(task->comm, "easter_egg") == 0) && ( !noprintk)) { // Extra logging for the some command
-        noprintk = 1; // Avoid recursive logging -mke
-        printk("INFO: MCRC(%d(%s):%s:%d:%d:%d)\n", task->pid, task->comm, file, line, value, task->critical_region.count + value);
-        noprintk = 0;
-    }
-    
-    task->critical_region.count = task->critical_region.count + value;
-        
-    pthread_mutex_unlock(&task->critical_region.lock);
-}
-
-void modify_critical_region_counter_wrapper(int value, __attribute__((unused)) const char *file, __attribute__((unused)) int line) { // sync.h can't know about the definition of task struct due to recursive include files.  -mke
-    if(current != NULL)
-        modify_critical_region_counter(current, value, file, line);
-    return;
-}
-
-void modify_locks_held_count(struct task *task, int value) { // value Should only be -1 or 1.  -mke
-    if((task == NULL) && (current != NULL)) {
-        task = current;
-    } else {
-        return;
-    }
-    
-    pthread_mutex_lock(&task->locks_held.lock);
-    if(!task->locks_held.count && (value < 0)) { // Prevent our unsigned value attempting to go negative.  -mke
-       if((task->pid > 2) && (!strcmp(task->comm, "init")))  // Why ask why?  -mke
-            printk("ERROR: Attempt to decrement locks_held count when it is already zero, ignoring\n");
-        return;
-    }
-    task->locks_held.count = task->locks_held.count + value;
-    pthread_mutex_unlock(&task->locks_held.lock);
-}
-
-void modify_locks_held_count_wrapper(int value) { // sync.h can't know about the definition of struct due to recursive include files.  -mke
-    if(current != NULL)
-        modify_locks_held_count(current, value);
-    return;
-}
-
 // This is how you would mitigate the unlock/wait race if the wait
 // is async signal safe. wait_for *should* be safe from this race
 // because of synchronization involving the waiting_cond_lock.
@@ -226,7 +117,7 @@ void modify_locks_held_count_wrapper(int value) { // sync.h can't know about the
         should_unwind = true;
         sigprocmask(SIG_BLOCK, &sigusr1, NULL);
         if (lock != &current->sighand->lock)
-            lock(&current->sighand->lock, 0);
+            lock(&current->sighand->lock);
         bool pending = !!(current->pending & ~current->blocked);
         if (lock != &current->sighand->lock)
             unlock(&current->sighand->lock);

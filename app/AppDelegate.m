@@ -299,15 +299,15 @@ void NetworkReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
                               owner:self usingBlock:^(typeof(self) self) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // Need to toggle pending lock off here.
-            doEnableMulticore = UserPreferences.shared.shouldEnableMulticore;
-            pthread_mutex_unlock(&multicore_lock); // Be sure not to leave around orphan lock
+            // doEnableMulticore = UserPreferences.shared.shouldEnableMulticore;
+            // pthread_mutex_unlock(&multicore_lock); // Be sure not to leave around orphan lock
         });
     }];
     [UserPreferences.shared observe:@[@"shouldEnableExtraLocking"] options:NSKeyValueObservingOptionInitial
                               owner:self usingBlock:^(typeof(self) self) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            doEnableExtraLocking = UserPreferences.shared.shouldEnableExtraLocking;
-            pthread_mutex_unlock(&extra_lock); // Be sure not to leave around orphan lock
+            // doEnableExtraLocking = UserPreferences.shared.shouldEnableExtraLocking;
+            // pthread_mutex_unlock(&extra_lock); // Be sure not to leave around orphan lock
         });
     }];
  //   [UserPreferences.shared observe:@[@"shouldLockSleepNanoseconds"] options:NSKeyValueObservingOptionInitial
