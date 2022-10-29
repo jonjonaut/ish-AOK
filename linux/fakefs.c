@@ -90,7 +90,7 @@ static struct dentry *fakefs_lookup(struct inode *ino, struct dentry *dentry, un
 out:
     if (IS_ERR(child)) {
         db_rollback(&info->db);
-        printk("ERROR: fakefs_lookup failed: %pe\n", child);
+        printk("fakefs_lookup failed: %pe\n", child);
     } else {
         db_commit(&info->db);
     }
@@ -413,11 +413,10 @@ static int fakefs_iterate(struct file *file, struct dir_context *ctx) {
             ent.ino = d_inode(file->f_path.dentry->d_parent)->i_ino;
         } else {
             db_begin(&info->db);
-            const size_t namelen = strlen(ent.name) + 1;
-            if (dir_path_len + 1 + namelen > PATH_MAX)
+            if (dir_path_len + 1 + strlen(ent.name) + 1 > PATH_MAX)
                 continue; // a
             dir_path[dir_path_len] = '/';
-            memcpy(&dir_path[dir_path_len + 1], ent.name, namelen);
+            strcpy(&dir_path[dir_path_len + 1], ent.name);
             ent.ino = path_get_inode(&info->db, dir_path);
             db_commit(&info->db);
         }
@@ -596,7 +595,7 @@ static int read_inode(struct inode *ino) {
         ino->i_op = &fakefs_iops;
         break;
     default:
-        printk("ERROR: read_inode: unexpected S_IFMT: %o\n", ino->i_mode & S_IFMT);
+        printk("read_inode: unexpected S_IFMT: %o\n", ino->i_mode & S_IFMT);
         return -EIO;
     }
     return 0;
@@ -655,7 +654,7 @@ static int fakefs_fill_super(struct super_block *sb, struct fs_context *fc) {
     db_begin(&info->db);
     root->i_ino = path_get_inode(&info->db, "");
     if (root->i_ino == 0) {
-        printk("ERROR: fakefs: could not find root inode\n");
+        printk("fakefs: could not find root inode\n");
         db_rollback(&info->db);
         iput(root);
         return -EINVAL;
@@ -709,23 +708,17 @@ static int fakefs_get_tree(struct fs_context *fc) {
     struct fakefs_super *info = fc->s_fs_info;
     struct fakefs_context *ctx = fc->fs_private;
 
-    static const char pd[] = "/data";
-    static const char pdb[] = "/meta.db";
-
-    const size_t pathlen = strlen(ctx->path);
-    char *path = kmalloc(pathlen + 10, GFP_KERNEL);
-    memcpy(path, ctx->path, pathlen);
-    memcpy(path[pathlen], pd, sizeof(pd));
-
+    char *path = kmalloc(strlen(ctx->path) + 10, GFP_KERNEL);
+    strcpy(path, ctx->path);
+    strcat(path, "/data");
     info->root_fd = host_open(path, O_RDONLY);
     if (info->root_fd < 0) {
         kfree(path);
         return info->root_fd;
     }
 
-    memcpy(path, ctx->path, pathlen);
-    memcpy(path[pathlen], pdb, sizeof(pdb));
-
+    strcpy(path, ctx->path);
+    strcat(path, "/meta.db");
     int err = fake_db_init(&info->db, path, info->root_fd);
     if (err < 0) {
         kfree(path);
