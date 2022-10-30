@@ -7,16 +7,18 @@
 #include "kernel/task.h"
 #include "kernel/resource_locking.h"
 
-dword_t syscall_stub() {
+extern bool isGlibC;
+
+dword_t syscall_stub(void) {
     STRACE("syscall_stub()");
     //STRACE("syscall_stub()");
     return _ENOSYS;
 }
-dword_t syscall_stub_silent() {
+dword_t syscall_stub_silent(void) {
     STRACE("syscall_stub_silent()");
     return _ENOSYS;
 }
-dword_t syscall_success_stub() {
+dword_t syscall_success_stub(void) {
     STRACE("syscall_stub_success()");
     return 0;
 }
@@ -125,6 +127,7 @@ syscall_t syscall_table[] = {
     [157] = (syscall_t) sys_sched_getscheduler,
     [158] = (syscall_t) sys_sched_yield,
     [159] = (syscall_t) sys_sched_get_priority_max,
+    [160] = (syscall_t) sys_sched_get_priority_min,
     [162] = (syscall_t) sys_nanosleep,
     [163] = (syscall_t) sys_mremap,
     [168] = (syscall_t) sys_poll,
