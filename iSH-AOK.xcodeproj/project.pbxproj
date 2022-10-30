@@ -21,6 +21,12 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0FC3A01B290E0ED4001B98CD /* solarizeddark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FC3A018290E0ED4001B98CD /* solarizeddark.png */; };
+		0FC3A01C290E0ED4001B98CD /* solarizeddark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FC3A018290E0ED4001B98CD /* solarizeddark.png */; };
+		0FC3A01D290E0ED4001B98CD /* solarizedcolor.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FC3A019290E0ED4001B98CD /* solarizedcolor.png */; };
+		0FC3A01E290E0ED4001B98CD /* solarizedcolor.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FC3A019290E0ED4001B98CD /* solarizedcolor.png */; };
+		0FC3A01F290E0ED4001B98CD /* solarizedlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FC3A01A290E0ED4001B98CD /* solarizedlight.png */; };
+		0FC3A020290E0ED4001B98CD /* solarizedlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FC3A01A290E0ED4001B98CD /* solarizedlight.png */; };
 		491B31E62883BF22008EEFB0 /* ThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 491B31E52883BF22008EEFB0 /* ThemeViewController.m */; };
 		49302D8E277669D300C9885A /* ish.c in Sources */ = {isa = PBXBuildFile; fileRef = 49302D8D277669D300C9885A /* ish.c */; };
 		496C7AB227CC697E005D7613 /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 491C4C1E27C8FB65008B1DFA /* Theme.m */; };
@@ -399,6 +405,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0FC3A018290E0ED4001B98CD /* solarizeddark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = solarizeddark.png; sourceTree = "<group>"; };
+		0FC3A019290E0ED4001B98CD /* solarizedcolor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = solarizedcolor.png; sourceTree = "<group>"; };
+		0FC3A01A290E0ED4001B98CD /* solarizedlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = solarizedlight.png; sourceTree = "<group>"; };
 		408A2639236440F8008A4E81 /* iOSFS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iOSFS.m; sourceTree = "<group>"; };
 		408A263B23644102008A4E81 /* iOSFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iOSFS.h; sourceTree = "<group>"; };
 		491B31E42883BF22008EEFB0 /* ThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeViewController.h; sourceTree = "<group>"; };
@@ -897,6 +906,9 @@
 		BB1B9A4123A5E92A00414052 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				0FC3A018290E0ED4001B98CD /* solarizeddark.png */,
+				0FC3A019290E0ED4001B98CD /* solarizedcolor.png */,
+				0FC3A01A290E0ED4001B98CD /* solarizedlight.png */,
 				BB0F552D239F8A790032A2A1 /* Icons.plist */,
 				BB4A923124EDA560002F5A96 /* 3d.png */,
 				BB38597627BCEC70000A1082 /* circular.png */,
@@ -1704,6 +1716,7 @@
 				BB3859A227BCEE6B000A1082 /* dollarblock2.png in Resources */,
 				BB3859A727BCEE6B000A1082 /* uninspired.png in Resources */,
 				BB38599B27BCEE6B000A1082 /* rgb.png in Resources */,
+				0FC3A01F290E0ED4001B98CD /* solarizedlight.png in Resources */,
 				BB38599927BCEE6B000A1082 /* dollarblock1.png in Resources */,
 				BB38599C27BCEE6B000A1082 /* sprite64.png in Resources */,
 				BB792B5D1F96D90D00FFB7A4 /* Assets.xcassets in Resources */,
@@ -1719,6 +1732,7 @@
 				BB38599427BCEE6B000A1082 /* pydann1.png in Resources */,
 				BB0F552E239F8A790032A2A1 /* Icons.plist in Resources */,
 				BB38599527BCEE6B000A1082 /* pydann2.png in Resources */,
+				0FC3A01B290E0ED4001B98CD /* solarizeddark.png in Resources */,
 				BB2B4DAF231D998300CB578B /* term.html in Resources */,
 				BB3859A027BCEE6B000A1082 /* 3d.png in Resources */,
 				BB10E5D0248DC21D009C7A74 /* Roots.storyboard in Resources */,
@@ -1732,6 +1746,7 @@
 				BB38599E27BCEE6B000A1082 /* circular.png in Resources */,
 				BB38599F27BCEE6B000A1082 /* icon1337.png in Resources */,
 				BB3859A127BCEE6B000A1082 /* iinhash.png in Resources */,
+				0FC3A01D290E0ED4001B98CD /* solarizedcolor.png in Resources */,
 				BB38599727BCEE6B000A1082 /* freeiosterminal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1768,12 +1783,15 @@
 				BBEF198D268066D1001225BD /* reworked.png in Resources */,
 				BBEF198E268066D1001225BD /* Roots.storyboard in Resources */,
 				BBEF198F268066D1001225BD /* idollarhash.png in Resources */,
+				0FC3A01E290E0ED4001B98CD /* solarizedcolor.png in Resources */,
 				BB3859A827BCEE6C000A1082 /* is.png in Resources */,
 				BB38597F27BCEC78000A1082 /* dollarblock2.png in Resources */,
 				BBEF1990268066D1001225BD /* hterm_all.js in Resources */,
 				BB38597827BCEC70000A1082 /* circular.png in Resources */,
 				BBEF1991268066D1001225BD /* icon1337.png in Resources */,
 				BBEF1992268066D1001225BD /* rgb.png in Resources */,
+				0FC3A01C290E0ED4001B98CD /* solarizeddark.png in Resources */,
+				0FC3A020290E0ED4001B98CD /* solarizedlight.png in Resources */,
 				BBEF1993268066D1001225BD /* term.css in Resources */,
 				BBEF1994268066D1001225BD /* term.js in Resources */,
 				BBEF1995268066D1001225BD /* sprite64.png in Resources */,
@@ -2502,6 +2520,7 @@
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -2528,6 +2547,7 @@
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -2561,6 +2581,7 @@
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -2882,6 +2903,7 @@
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
