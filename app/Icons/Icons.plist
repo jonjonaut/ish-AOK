@@ -20,6 +20,33 @@
 		<key>description</key>
 		<string>i#</string>
 	</dict>
+	<key>solarizeddark</key>
+	<dict>
+		<key>link</key>
+		<string></string>
+		<key>author</key>
+		<string>@jason-conway</string>
+		<key>description</key>
+		<string>Solarized Dark</string>
+	</dict>
+	<key>solarizedlight</key>
+	<dict>
+		<key>link</key>
+		<string></string>
+		<key>author</key>
+		<string>@jason-conway</string>
+		<key>description</key>
+		<string>Solarized Light</string>
+	</dict>
+	<key>solarizedcolor</key>
+	<dict>
+		<key>link</key>
+		<string></string>
+		<key>author</key>
+		<string>@jason-conway</string>
+		<key>description</key>
+		<string>Solarized Color</string>
+	</dict>
 	<key>uninspired</key>
 	<dict>
 		<key>link</key>
