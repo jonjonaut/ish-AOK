@@ -2549,7 +2549,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2575,7 +2575,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2610,7 +2610,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2628,8 +2628,9 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 432;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2652,9 +2653,10 @@
 				CODE_SIGN_ENTITLEMENTS = app/FileProvider/iSHFileProvider.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 441;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2763,9 +2765,10 @@
 				CODE_SIGN_ENTITLEMENTS = app/FileProvider/iSHFileProvider.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 441;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2781,9 +2784,10 @@
 				CODE_SIGN_ENTITLEMENTS = iSHFileProviderRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 441;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2884,8 +2888,9 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 432;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2898,8 +2903,9 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 432;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2931,7 +2937,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2948,8 +2954,9 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 432;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK";
 				PRODUCT_NAME = "iSH-AOK";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2972,9 +2979,10 @@
 				CODE_SIGN_ENTITLEMENTS = app/FileProvider/iSHFileProvider.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 441;
+				CURRENT_PROJECT_VERSION = 486;
 				DEVELOPMENT_TEAM = UYU5FM4LQ4;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
+				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.ish.iSH-AOK.FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
