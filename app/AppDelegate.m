@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "AppGroup.h"
 #import "CurrentRoot.h"
+#import "ExceptionExfiltrator.h"
 #import "iOSFS.h"
 #import "SceneDelegate.h"
 #import "PasteboardDevice.h"
@@ -64,12 +65,9 @@ static void ios_handle_exit(struct task *task, int code) {
     });
 }
 
-// Put the abort message in the thread name so it gets included in the crash dump
 static void ios_handle_die(const char *msg) {
-    char name[17];
-    pthread_getname_np(pthread_self(), name, sizeof(name));
-    NSString *newName = [NSString stringWithFormat:@"%s died: %s", name, msg];
-    pthread_setname_np(newName.UTF8String);
+    NSString *message = [NSString stringWithFormat:@"%s: %s", __func__, msg];
+    iSHExceptionHandler([[NSException alloc] initWithName:NSGenericException reason:message userInfo:nil]);
 }
 #elif ISH_LINUX
 void ReportPanic(const char *message) {
@@ -325,8 +323,9 @@ void NetworkReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
   //  }];
     
     struct sockaddr_in6 address = {
+    // This code is IPv4 and IPv6 aware: see https://developer.apple.com/library/archive/samplecode/Reachability/Listings/ReadMe_md.html
         .sin6_len = sizeof(address),
-        .sin6_family = AF_INET6,
+        .sin6_family = AF_INET,
     };
     self.reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (struct sockaddr *) &address);
     SCNetworkReachabilityContext context = {

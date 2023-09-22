@@ -107,8 +107,8 @@ static int proc_pid_stat_show(struct proc_entry *entry, struct proc_data *buf) {
     proc_printf(buf, "%lu ", 0l); // wchan (wtf)
     proc_printf(buf, "%lu ", 0l); // nswap
     proc_printf(buf, "%lu ", 0l); // cnswap
-    proc_printf(buf, "%d", task->exit_signal);
-    proc_printf(buf, "%d", 0); // processor
+    proc_printf(buf, "%d ", task->exit_signal);
+    proc_printf(buf, "%d ", 0l); // processor
     // that's enough for now
     proc_printf(buf, "\n");
     
@@ -124,13 +124,13 @@ static int proc_pid_statm_show(struct proc_entry *entry, struct proc_data *buf) 
     struct task *task = proc_get_task(entry);
      if (task == NULL)
          return _ESRCH;
-    proc_printf(buf, "%lu ", 0l); // size
-    proc_printf(buf, "%lu ", 0l); // resident
-    proc_printf(buf, "%lu ", 0l); // shared
-    proc_printf(buf, "%lu ", 0l); // text
-    proc_printf(buf, "%lu ", 0l); // lib (unused since Linux 2.6)
-    proc_printf(buf, "%lu ", 0l); // data
-    proc_printf(buf, "%lu\n", 0l); // dt (unused since Linux 2.6)
+    proc_printf(buf, "%lu ", 0); // size
+    proc_printf(buf, "%lu ", 0); // resident
+    proc_printf(buf, "%lu ", 0); // shared
+    proc_printf(buf, "%lu ", 0); // text
+    proc_printf(buf, "%lu ", 0); // lib (unused since Linux 2.6)
+    proc_printf(buf, "%lu ", 0); // data + stack
+    proc_printf(buf, "%lu\n", 0); // dt (unused since Linux 2.6)
     proc_printf(buf, "\n");
     
     proc_put_task(task);

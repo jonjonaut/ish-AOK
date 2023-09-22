@@ -17,8 +17,10 @@ extern void run_at_boot(void);
       [[NSProcessInfo processInfo] beginActivityWithOptions:0x00FFFFFF reason:@"Not sleepy and don't want to nap"];
    }
 } */
+#import "ExceptionExfiltrator.h"
 
 int main(int argc, char * argv[]) {
+    NSSetUncaughtExceptionHandler(iSHExceptionHandler);
     @autoreleasepool {
  //       disable_app_nap();  // No napping I say. -mke (Though I don't know that this works on iOS/iPadOS
         run_at_boot();

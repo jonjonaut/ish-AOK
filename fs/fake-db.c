@@ -14,8 +14,7 @@ static void db_check_error(struct fakefs_db *fs) {
             break;
 
         default:
-            printk("ERROR: sqlite error: %s.  Probable filesystem corruption.  Backup and reinstall.", sqlite3_errmsg(fs->db));
-                         //die("sqlite error: %s", sqlite3_errmsg(fs->db));
+            die("ERROR: sqlite error: %d %#x %s. Probable filesystem corruption.  Backup and reinstall.", errcode, sqlite3_extended_errcode(fs->db), sqlite3_errmsg(fs->db));
     }
 }
 
