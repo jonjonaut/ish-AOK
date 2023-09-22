@@ -11,17 +11,16 @@ extern void run_at_boot(void);
 #import <Foundation/Foundation.h>
 #import <Foundation/NSProcessInfo.h>
 
-void disable_app_nap(void)
-{
+/*void disable_app_nap(void) {
    if ([[NSProcessInfo processInfo] respondsToSelector:@selector(beginActivityWithOptions:reason:)])
    {
       [[NSProcessInfo processInfo] beginActivityWithOptions:0x00FFFFFF reason:@"Not sleepy and don't want to nap"];
    }
-}
+} */
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
-        disable_app_nap();  // No napping I say. -mke
+ //       disable_app_nap();  // No napping I say. -mke (Though I don't know that this works on iOS/iPadOS
         run_at_boot();
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

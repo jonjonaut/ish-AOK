@@ -690,7 +690,7 @@ int_t sys_rt_sigtimedwait(addr_t set_addr, addr_t info_addr, addr_t timeout_addr
     lock(&current->sighand->lock, 0);
     assert(current->waiting == 0);
     current->waiting = set;
-    int err;
+    int err = 0;
     TASK_MAY_BLOCK {
         do {
             err = wait_for(&current->pause, &current->sighand->lock, timeout_addr == 0 ? NULL : &timeout);
@@ -712,6 +712,7 @@ int_t sys_rt_sigtimedwait(addr_t set_addr, addr_t info_addr, addr_t timeout_addr
             break;
         }
     }
+    unlock(&current->sighand->lock); // upstream a17fe7c
     if (!found)
         return _EINTR;
     struct siginfo_ info = sigqueue->info;
@@ -719,7 +720,6 @@ int_t sys_rt_sigtimedwait(addr_t set_addr, addr_t info_addr, addr_t timeout_addr
     if (info_addr != 0)
         if (user_put(info_addr, info))
             return _EFAULT;
-    unlock(&current->sighand->lock);
     STRACE("done sigtimedwait = %d\n", info.sig);
     return info.sig;
 }

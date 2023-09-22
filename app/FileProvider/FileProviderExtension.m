@@ -10,7 +10,6 @@
 #import "FileProviderEnumerator.h"
 #import "NSError+ISHErrno.h"
 #import "../AppGroup.h"
-#import "../ExceptionExfiltrator.h"
 #include "fs/fake-db.h"
 
 @interface FileProviderExtension () {
@@ -443,7 +442,7 @@
 }
 
 + (void)load {
-    NSSetUncaughtExceptionHandler(iSHExceptionHandler);
+   // NSSetUncaughtExceptionHandler(iSHExceptionHandler);
 }
 
 @end
