@@ -69,16 +69,15 @@ static void ios_handle_exit(struct task *task, int code) {
     });
 }
 
-const char* getCurrentTimestamp(void);
+const char* getRenameRunDirString(void);
 
-const char* getCurrentTimestamp(void) {
+const char* getRenameRunDirString(void) {
     NSDate *currentDate = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd_HH:mm:ss"];
     NSString *timestamp = [dateFormatter stringFromDate:currentDate];
 
-    // Prepending "/tmp/" to the timestamp
-    NSString *prefixedTimestamp = [NSString stringWithFormat:@"/tmp/%@", timestamp];
+    NSString *prefixedTimestamp = [NSString stringWithFormat:@"/tmp/%@.run", timestamp];
 
     // Convert to const char* and return
     return [prefixedTimestamp UTF8String];
@@ -148,10 +147,11 @@ static NSString *const kSkipStartupMessage = @"Skip Startup Message";
     generic_setattrat(AT_PWD, "/", (struct attr) {.type = attr_mode, .mode = 0755}, false);
     
     // Create a unique directory in /tmp and link to /var/run
-    const char *timestamp = getCurrentTimestamp();
-    generic_mkdirat(AT_PWD, timestamp, 0755);
+    const char *rename = getRenameRunDirString();
+    generic_renameat(AT_PWD, "/tmp/run", AT_PWD, rename);
+    generic_mkdirat(AT_PWD, "/tmp/run", 0755);
     generic_unlinkat(AT_PWD, "/var/run");
-    generic_symlinkat(timestamp, AT_PWD, "/var/run");
+    generic_symlinkat("/tmp/run", AT_PWD, "/var/run");
     
     // Create directories/links to simulate /sys stuff for battery monitoring
     generic_mkdirat(AT_PWD, "/sys/class", 0755);
@@ -159,8 +159,6 @@ static NSString *const kSkipStartupMessage = @"Skip Startup Message";
     generic_mkdirat(AT_PWD, "/sys/class/power_supply/BAT0", 0755);
     generic_symlinkat("/proc/ish/BAT0_capacity", AT_PWD, "/sys/class/power_supply/BAT0/capacity");
     generic_symlinkat("/proc/ish/BAT0_status", AT_PWD, "/sys/class/power_supply/BAT0/status");
-    
-    
     
     // Register clipboard device driver and create device node for it
     err = dyn_dev_register(&clipboard_dev, DEV_CHAR, DYN_DEV_MAJOR, DEV_CLIPBOARD_MINOR);
