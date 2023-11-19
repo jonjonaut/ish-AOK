@@ -74,10 +74,10 @@ const char* getRenameRunDirString(void);
 const char* getRenameRunDirString(void) {
     NSDate *currentDate = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH:mm:ss"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
     NSString *timestamp = [dateFormatter stringFromDate:currentDate];
 
-    NSString *prefixedTimestamp = [NSString stringWithFormat:@"/tmp/%@.run", timestamp];
+    NSString *prefixedTimestamp = [NSString stringWithFormat:@"/tmp/old-run.%@", timestamp];
 
     // Convert to const char* and return
     return [prefixedTimestamp UTF8String];
