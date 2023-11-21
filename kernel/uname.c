@@ -14,6 +14,11 @@ char *uname_hostname_override = NULL;
 
 
 void do_uname(struct uname *uts) {
+    if (uts == NULL) {
+        printk("ERROR: Null pointer provided to do_uname()\n");
+        return;
+    }
+    
     struct utsname real_uname;
     if (uname(&real_uname) < 0) {
         printk("ERROR: uname failed\n");
@@ -41,10 +46,10 @@ void do_uname(struct uname *uts) {
     const char *uname_version = "iSH-AOK"; // Version should be defined or externally managed
 
     // Fill the uname structure
-    strncpy(uts->arch, "i686", sizeof(uts->arch));
-    strncpy(uts->domain, "(none)", sizeof(uts->domain));
-    strncpy(uts->release, "4.20.69-ish_aok", sizeof(uts->release));
-    strncpy(uts->system, "Linux", sizeof(uts->system));
+    strlcpy(uts->arch, "i686", sizeof(uts->arch));
+    strlcpy(uts->domain, "(none)", sizeof(uts->domain));
+    strlcpy(uts->release, "4.20.69-ish_aok", sizeof(uts->release));
+    strlcpy(uts->system, "Linux", sizeof(uts->system));
     snprintf(uts->hostname, sizeof(uts->hostname), "%s", hostname);
     snprintf(uts->version, sizeof(uts->version), "%s %s", uname_version, build_date);
 }

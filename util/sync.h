@@ -62,9 +62,9 @@ static inline void lock_init(lock_t *lock, char lname[16]) {
     }
     
     if(lname != NULL) {
-        strncpy(lock->lname, lname, 16);
+        strlcpy(lock->lname, lname, 16);
     } else {
-        strncpy(lock->lname, "WTF", 16);
+        strlcpy(lock->lname, "WTF", 16);
     }
     lock->wait4 = false;
 #if LOCK_DEBUG
@@ -97,8 +97,8 @@ static inline void atomic_l_lockf(char lname[16], const char *file, int line) { 
         }
     }
     if(!res) {
-        strncpy((char *)&atomic_l_lock.comm, current_comm(), 16);
-        strncpy((char *)&atomic_l_lock.lname, lname, 16);
+        strlcpy((char *)&atomic_l_lock.comm, current_comm(), 16);
+        strlcpy((char *)&atomic_l_lock.lname, lname, 16);
         modify_locks_held_count_wrapper(1);
     } else {
         printk("Error on locking lock (%s) Called from %s:%d\n", lname, file, line);
@@ -114,7 +114,7 @@ static inline void atomic_l_unlockf(void) {
         return;
     int res = 0;
     modify_critical_region_counter_wrapper(1, __FILE__, __LINE__);
-    strncpy((char *)&atomic_l_lock.lname,"\0", 1);
+    strlcpy((char *)&atomic_l_lock.lname,"\0", 1);
     res = pthread_mutex_unlock(&atomic_l_lock.m);
     if(res) {
         printk("ERROR: unlocking locking lock\n");
@@ -164,8 +164,7 @@ static inline void complex_lockt(lock_t *lock, int log_lock, __attribute__((unus
     lock->owner = pthread_self();
     lock->pid = current_pid();
     lock->uid = current_uid();
-    strncpy(lock->comm, current_comm(), sizeof(lock->comm) - 1);
-    lock->comm[sizeof(lock->comm) - 1] = '\0';  // Null-terminate just in case
+    strlcpy(lock->comm, current_comm(), sizeof(lock->comm) );
 }
 
 static inline void __lock(lock_t *lock, int log_lock, __attribute__((unused)) const char *file, __attribute__((unused)) int line) {

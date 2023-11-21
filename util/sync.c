@@ -121,7 +121,7 @@ int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout
     }
     int rc = 0;
     char saveme[16];
-    strncpy(saveme, lock->lname, 16); // Save for later
+    strlcpy(saveme, lock->lname, 16); // Save for later
 #if LOCK_DEBUG
     struct lock_debug lock_tmp = lock->debug;
     lock->debug = (struct lock_debug) { .initialized = lock->debug.initialized };
