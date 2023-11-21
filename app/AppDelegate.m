@@ -77,7 +77,7 @@ const char* getRenameRunDirString(void) {
     [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
     NSString *timestamp = [dateFormatter stringFromDate:currentDate];
 
-    NSString *prefixedTimestamp = [NSString stringWithFormat:@"/tmp/old-run.%@", timestamp];
+    NSString *prefixedTimestamp = [NSString stringWithFormat:@"/tmp/old-run/%@", timestamp];
 
     // Convert to const char* and return
     return [prefixedTimestamp UTF8String];
@@ -146,12 +146,13 @@ static NSString *const kSkipStartupMessage = @"Skip Startup Message";
     // Permissions on / have been broken for a while, let's fix them
     generic_setattrat(AT_PWD, "/", (struct attr) {.type = attr_mode, .mode = 0755}, false);
     
-    // Create a unique directory in /tmp and link to /var/run
+    // mv current /run to /tmp/run-old.[timestamp], create new /run and link to /var/run
+    generic_mkdirat(AT_PWD, "/tmp/old-run", 0755);
     const char *rename = getRenameRunDirString();
-    generic_renameat(AT_PWD, "/tmp/run", AT_PWD, rename);
-    generic_mkdirat(AT_PWD, "/tmp/run", 0755);
+    generic_renameat(AT_PWD, "/run", AT_PWD, rename);
+    generic_mkdirat(AT_PWD, "/run", 0755);
     generic_unlinkat(AT_PWD, "/var/run");
-    generic_symlinkat("/tmp/run", AT_PWD, "/var/run");
+    generic_symlinkat("/run", AT_PWD, "/var/run");
     
     // Create directories/links to simulate /sys stuff for battery monitoring
     generic_mkdirat(AT_PWD, "/sys/class", 0755);
