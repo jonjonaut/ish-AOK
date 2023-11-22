@@ -267,7 +267,7 @@ char * current_comm(void) {
     static char comm[16];
     if(current != NULL) {
         if(strcmp(current->comm, "")) {
-            strncpy(comm, current->comm, 16);
+            strlcpy(comm, current->comm, 16);
         } else {
             return "";
         }

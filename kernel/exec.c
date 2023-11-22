@@ -605,7 +605,7 @@ int __do_execve(const char *file, struct exec_args argv, struct exec_args envp) 
         basename = file;
     else
         basename++;
-    strncpy(current->comm, basename, sizeof(current->comm));
+    strlcpy(current->comm, basename, sizeof(current->comm));
     unlock(&current->general_lock);
 
     update_thread_name();

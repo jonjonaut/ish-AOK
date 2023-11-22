@@ -359,7 +359,7 @@ static int fakefs_mount(struct mount *mount) {
     strncpy(db_path, mount->source, PATH_MAX -1);
     char *basename = strrchr(db_path, '/') + 1;
     assert(strcmp(basename, "data") == 0);
-    strncpy(basename, "meta.db", 8);
+    strlcpy(basename, "meta.db", 8);
 
     // do this now so rebuilding can use root_fd
     int err = realfs.mount(mount);

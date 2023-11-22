@@ -109,7 +109,7 @@ static ssize_t clipboard_read_sync(clip_fd *fd) {
     }
 
     @autoreleasepool {
-        size_t len;
+        size_t len = 0;
         const void *data = get_data(fd, &len);
 
         // Make sure size is still INITIAL_BUFFER_CAP based

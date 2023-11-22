@@ -175,14 +175,14 @@ static inline void __lock(lock_t *lock, int log_lock, __attribute__((unused)) co
         lock->owner = pthread_self();
         lock->pid = current_pid();
         lock->uid = current_uid();
-        strncpy(lock->comm, current_comm(), 16);
+        strlcpy(lock->comm, current_comm(), 16);
         modify_critical_region_counter_wrapper(-1, __FILE__, __LINE__);
     } else {
         pthread_mutex_lock(&lock->m);
         lock->owner = pthread_self();
         lock->pid = current_pid();
         lock->uid = current_uid();
-        strncpy(lock->comm, current_comm(), 16);
+        strlcpy(lock->comm, current_comm(), 16);
     }
     return;
 }
@@ -343,7 +343,7 @@ static inline void __write_lock(wrlock_t *lock, const char *file, int line) { //
     lock->line = line;
     lock->pid = current_pid();
     if(lock->pid > 9)
-        strncpy((char *)lock->comm, current_comm(), 16);
+        strlcpy((char *)lock->comm, current_comm(), 16);
     //STRACE("write_lock(%x, %s(%d), %s, %d\n", lock, lock->comm, lock->pid, file, line);
 }
 
@@ -370,7 +370,7 @@ static inline int trylockw(wrlock_t *lock, __attribute__((unused)) const char *f
         modify_locks_held_count_wrapper(1);
         //STRACE("trylockw(%x, %s(%d), %s, %d\n", lock, lock->comm, lock->pid, file, line);
         lock->pid = current_pid();
-        strncpy(lock->comm, current_comm(), 16);
+        strlcpy(lock->comm, current_comm(), 16);
     }
     return status;
 }
@@ -395,7 +395,7 @@ static inline int trylock(lock_t *lock, __attribute__((unused)) const char *file
         
         //STRACE("trylock(%x, %s(%d), %s, %d\n", lock, lock->comm, lock->pid, file, line);
         lock->pid = current_pid();
-        strncpy(lock->comm, current_comm(), 16);
+        strlcpy(lock->comm, current_comm(), 16);
     }
     return status;
 }
@@ -499,7 +499,7 @@ static inline void _read_lock(wrlock_t *lock, __attribute__((unused)) const char
     
     lock->pid = current_pid();
     if(lock->pid > 9)
-        strncpy((char *)lock->comm, current_comm(), 16);
+        strlcpy((char *)lock->comm, current_comm(), 16);
     modify_critical_region_counter_wrapper(-1, __FILE__, __LINE__);
     //STRACE("read_lock(%d, %s(%d), %s, %d\n", lock, lock->comm, lock->pid, file, line);
 }

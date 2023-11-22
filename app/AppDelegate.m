@@ -153,6 +153,8 @@ static NSString *const kSkipStartupMessage = @"Skip Startup Message";
     generic_mkdirat(AT_PWD, "/run", 0755);
     generic_unlinkat(AT_PWD, "/var/run");
     generic_symlinkat("/run", AT_PWD, "/var/run");
+    // The following would be a better solution for /var/run, but tmpfs is currently broken
+    //do_mount(&tmpfs, "run", "/run", "", 0);
     
     // Create directories/links to simulate /sys stuff for battery monitoring
     generic_mkdirat(AT_PWD, "/sys/class", 0755);

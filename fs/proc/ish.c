@@ -166,7 +166,7 @@ char *get_ip_str(const struct sockaddr *sa, char *s, socklen_t maxlen) {
             break;
 
         default:
-            strncpy(s, "Unknown AF", maxlen);
+            strlcpy(s, "Unknown AF", maxlen);
             return NULL;
     }
 
@@ -204,7 +204,7 @@ char *parse_if_flags(int flags) {
         {IFF_MULTICAST, "MULTICAST"},
     };
 
-    for (int i = 0; i < sizeof(flag_str_map)/sizeof(flag_str_map[0]); ++i) {
+    for (unsigned long i = 0; i < sizeof(flag_str_map)/sizeof(flag_str_map[0]); ++i) {
         if (flags & flag_str_map[i].flag) {
             if (!first) {
                 strcat(build_string, ",");
@@ -235,9 +235,9 @@ static int proc_ish_show_ips(struct proc_entry *UNUSED(entry), struct proc_data 
             char int_dstaddr[100];
 
             if (cursor->ifa_addr->sa_family == AF_INET) {
-                strncpy(type, "IF_INET", sizeof(type));
+                strlcpy(type, "IF_INET", sizeof(type));
             } else {
-                strncpy(type, "IF_INET6", sizeof(type));
+                strlcpy(type, "IF_INET6", sizeof(type));
             }
             type[sizeof(type) - 1] = '\0';
             
@@ -250,7 +250,7 @@ static int proc_ish_show_ips(struct proc_entry *UNUSED(entry), struct proc_data 
             }
 
             char int_flags[250];
-            strncpy(int_flags, parse_if_flags(cursor->ifa_flags), sizeof(int_flags));
+            strlcpy(int_flags, parse_if_flags(cursor->ifa_flags), sizeof(int_flags));
             int_flags[sizeof(int_flags) - 1] = '\0';
             
             proc_printf(buf, "%-10.10s   %-40s   %-40s   %-8s  %-60s\n",
