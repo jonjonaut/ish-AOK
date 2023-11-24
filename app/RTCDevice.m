@@ -53,17 +53,7 @@ static rtc_time *get_current_time(rtc_fd *fd, size_t *len) {
 
 // Read current time into buffer
 static ssize_t rtc_read(rtc_fd *fd, void *buf, size_t bufsize) {
-    @autoreleasepool {
-        size_t length = 0;
-        rtc_time *data = get_current_time(fd, &length);
-
-        if (bufsize < length) {
-            return _EINVAL; // Buffer size is too small
-        }
-
-        memcpy(buf, data, length);
-        return length; // Return the number of bytes copied
-    }
+    return 0;
 }
 
 // Polling is not needed for RTC, return 0
