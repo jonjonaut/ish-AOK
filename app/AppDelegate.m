@@ -17,6 +17,7 @@
 #import "SceneDelegate.h"
 #import "PasteboardDevice.h"
 #import "LocationDevice.h"
+#import "RTCDevice.h"
 #import "NSObject+SaneKVO.h"
 #import "Roots.h"
 #import "TerminalViewController.h"
@@ -57,9 +58,7 @@ static void ios_handle_exit(struct task *task, int code) {
     pid_t pid = task->pid;
  //   if(pids_lock.pid == pid)
   //      unlock(&pids_lock);
-//    while((critical_region_count(task)) || (locks_held_count(task))) { // Wait for now, task is in one or more critical sections, and/or has locks
-//        nanosleep(&lock_pause, NULL);
-//    }
+
     unlock(&pids_lock);
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:ProcessExitedNotification
@@ -103,7 +102,6 @@ static NSString *const kSkipStartupMessage = @"Skip Startup Message";
 
 - (intptr_t)boot {
 #if !ISH_LINUX
-    
     NSURL *root = [Roots.instance rootUrl:Roots.instance.defaultRoot];
 
     intptr_t err = mount_root(&fakefs, [root URLByAppendingPathComponent:@"data"].fileSystemRepresentation);
@@ -165,16 +163,19 @@ static NSString *const kSkipStartupMessage = @"Skip Startup Message";
     
     // Register clipboard device driver and create device node for it
     err = dyn_dev_register(&clipboard_dev, DEV_CHAR, DYN_DEV_MAJOR, DEV_CLIPBOARD_MINOR);
-    if (err != 0) {
+    if (err != 0)
         return err;
-    }
     generic_mknodat(AT_PWD, "/dev/clipboard", S_IFCHR|0666, dev_make(DYN_DEV_MAJOR, DEV_CLIPBOARD_MINOR));
     
     err = dyn_dev_register(&location_dev, DEV_CHAR, DYN_DEV_MAJOR, DEV_LOCATION_MINOR);
     if (err != 0)
         return err;
     generic_mknodat(AT_PWD, "/dev/location", S_IFCHR|0666, dev_make(DYN_DEV_MAJOR, DEV_LOCATION_MINOR));
-    // The following does nothing for now.  Placeholder
+    
+    // Create an emulated Real Time Clock
+    err = dyn_dev_register(&rtc_dev, DEV_CHAR, DEV_RTC_MAJOR, DEV_RTC_MINOR);
+    if (err != 0)
+        return err;
     generic_mknodat(AT_PWD, "/dev/rtc0", S_IFCHR|0666, dev_make(DEV_RTC_MAJOR, DEV_RTC_MINOR));
     generic_symlinkat("/dev/rtc0", AT_PWD, "/dev/rtc");
 

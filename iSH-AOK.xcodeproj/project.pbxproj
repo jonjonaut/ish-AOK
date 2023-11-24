@@ -104,6 +104,9 @@
 		497F6D3D254E5EA600C82F46 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BB7D93822087C2890008DA78 /* main.c */; };
 		497F6D5C254E609700C82F46 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BB7D93822087C2890008DA78 /* main.c */; };
 		497F6D87254E62E100C82F46 /* libish.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB13F7DC200AD81D003D1C4D /* libish.a */; };
+		5D1EDCDD2B0ED04F00DE2547 /* RTCDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D1EDCDC2B0ED04F00DE2547 /* RTCDevice.m */; };
+		5D1EDCDE2B0ED04F00DE2547 /* RTCDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D1EDCDC2B0ED04F00DE2547 /* RTCDevice.m */; };
+		5D1EDCDF2B0ED04F00DE2547 /* RTCDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D1EDCDC2B0ED04F00DE2547 /* RTCDevice.m */; };
 		5D8ACEFA284BF122003C50D3 /* net.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ACEF9284BF122003C50D3 /* net.c */; };
 		5D8ACEFD284CE096003C50D3 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ACEFC284CE096003C50D3 /* sys.c */; };
 		5D8ACEFE284CE096003C50D3 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ACEFC284CE096003C50D3 /* sys.c */; };
@@ -583,6 +586,8 @@
 		497F6CD3254E5CC800C82F46 /* bits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bits.h; sourceTree = "<group>"; };
 		497F6CE4254E5E4C00C82F46 /* MakeXcodeAutoCompleteWork */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MakeXcodeAutoCompleteWork; sourceTree = BUILT_PRODUCTS_DIR; };
 		497F6D47254E605F00C82F46 /* ish-AOK */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "ish-AOK"; path = ish; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D1EDCDA2B0E6B9700DE2547 /* RTCDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCDevice.h; sourceTree = "<group>"; };
+		5D1EDCDC2B0ED04F00DE2547 /* RTCDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCDevice.m; sourceTree = "<group>"; };
 		5D272493277C20DF0005F2A8 /* iSHFileProviderRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iSHFileProviderRelease.entitlements; sourceTree = "<group>"; };
 		5D8ACEF9284BF122003C50D3 /* net.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = net.c; sourceTree = "<group>"; };
 		5D8ACEFB284CE096003C50D3 /* sys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sys.h; sourceTree = "<group>"; };
@@ -1057,6 +1062,7 @@
 			isa = PBXGroup;
 			children = (
 				5D9897CE28B6B953003D3670 /* AppStore.xcconfig */,
+				5D1EDCDA2B0E6B9700DE2547 /* RTCDevice.h */,
 				5D9897CF28B6B953003D3670 /* ViewController.h */,
 				BB792B531F96D90D00FFB7A4 /* AppDelegate.h */,
 				BB792B541F96D90D00FFB7A4 /* AppDelegate.m */,
@@ -1090,6 +1096,7 @@
 				BB88F4A4215476BA00A341FD /* iSH.entitlements */,
 				BB88F4912154760800A341FD /* FileProvider */,
 				BB41591D255EF9E300E0950C /* UITests */,
+				5D1EDCDC2B0ED04F00DE2547 /* RTCDevice.m */,
 			);
 			path = app;
 			sourceTree = "<group>";
@@ -2122,6 +2129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DA0A8342AAE21D000397280 /* BatteryStatus.m in Sources */,
+				5D1EDCDD2B0ED04F00DE2547 /* RTCDevice.m in Sources */,
 				5DD383EB2AAE33330013A847 /* UIDevice.m in Sources */,
 				BB28C7BB268975AE00BDC834 /* LocationDevice.m in Sources */,
 				5D8ACEFD284CE096003C50D3 /* sys.c in Sources */,
@@ -2147,6 +2155,7 @@
 				BB88F49A2154760800A341FD /* FileProviderEnumerator.m in Sources */,
 				BBBFE94921C5CFF100509DD5 /* NSError+ISHErrno.m in Sources */,
 				BB9C7B87240A2B1E00F5D4F0 /* AppGroup.m in Sources */,
+				5D1EDCDF2B0ED04F00DE2547 /* RTCDevice.m in Sources */,
 				BB88F4942154760800A341FD /* FileProviderExtension.m in Sources */,
 				BB88F4972154760800A341FD /* FileProviderItem.m in Sources */,
 			);
@@ -2172,6 +2181,7 @@
 				BB28C79226896B1F00BDC834 /* AboutAppearanceViewController.m in Sources */,
 				BB28C79326896B1F00BDC834 /* AltIconViewController.m in Sources */,
 				491B31E62883BF22008EEFB0 /* ThemeViewController.m in Sources */,
+				5D1EDCDE2B0ED04F00DE2547 /* RTCDevice.m in Sources */,
 				BB28C7B226896C4600BDC834 /* main.m in Sources */,
 				496C7AB227CC697E005D7613 /* Theme.m in Sources */,
 				BB28C79426896B1F00BDC834 /* AboutNavigationController.m in Sources */,
@@ -2523,6 +2533,7 @@
 				CURRENT_PROJECT_VERSION = 484;
 				DEAD_CODE_STRIPPING = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				"OTHER_CFLAGS[arch=*]" = "-v";
 			};
 			name = "Debug-ApplePleaseFixFB19282108";
 		};
@@ -2533,6 +2544,7 @@
 				CURRENT_PROJECT_VERSION = 484;
 				DEAD_CODE_STRIPPING = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				"OTHER_CFLAGS[arch=*]" = "-v";
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -3085,6 +3097,7 @@
 			baseConfigurationReference = BBFB2CDA259028DC00545EAB /* StaticLib.xcconfig */;
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
+				"OTHER_CFLAGS[arch=*]" = "-v";
 			};
 			name = "Debug-ApplePleaseFixFB19282108";
 		};
@@ -3093,6 +3106,7 @@
 			baseConfigurationReference = BBFB2CDA259028DC00545EAB /* StaticLib.xcconfig */;
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
+				"OTHER_CFLAGS[arch=*]" = "-v";
 			};
 			name = Release;
 		};

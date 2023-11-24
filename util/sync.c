@@ -37,7 +37,7 @@ void modify_critical_region_counter(struct task *task, int value, __attribute__(
     
     if(!doEnableExtraLocking) // If they want to fly by the seat of their pants...  -mke
         return;
-
+// mkemkemke Should I lock the process table here?
     if(task == NULL) {
         if(current != NULL) {
             task = current;
