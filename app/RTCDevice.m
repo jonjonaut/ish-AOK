@@ -8,7 +8,7 @@
 // Real Time Clock file descriptor structure
 typedef struct fd rtc_fd;
 
-// Function to get the current time
+// Need to define this, as we are running on iOS, which doesn't have/give access to the RTC
 typedef struct rtc_time {
     int tm_sec;   // seconds
     int tm_min;   // minutes
@@ -18,6 +18,7 @@ typedef struct rtc_time {
     int tm_year;  // year
 } rtc_time;
 
+// Get the time, put it in the appropriate structure
 static rtc_time *get_current_time(rtc_fd *fd, size_t *len) {
     // Obtain the current date
     NSDate *currentDate = [NSDate date];
@@ -51,22 +52,18 @@ static rtc_time *get_current_time(rtc_fd *fd, size_t *len) {
 }
 
 
-// Read current time into buffer
 static ssize_t rtc_read(rtc_fd *fd, void *buf, size_t bufsize) {
     return 0;
 }
 
-// Polling is not needed for RTC, return 0
 static int rtc_poll(rtc_fd *fd) {
     return 0;
 }
 
-// Function to open the RTC device
 static int rtc_open(int major, int minor, rtc_fd *fd) {
     return 0;
 }
 
-// Function to close the RTC device
 static int rtc_close(rtc_fd *fd) {
     return 0;
 }
