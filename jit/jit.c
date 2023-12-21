@@ -41,7 +41,7 @@ void jit_free(struct jit *jit) {
     bool signal_pending = !!(current->pending & ~current->blocked);
     while((task_ref_cnt_get(current, 0) > 2) || (locks_held_count(current)) || (signal_pending)) { // Wait for now, task is in one or more critical sections, and/or has locks, or signals in flight
         nanosleep(&lock_pause, NULL);
-        signal_pending = !!(current->pending & ~current->blocked);
+        signal_pending = current->blocked;
     }
     lock(&jit->lock, 0);
     for (size_t i = 0; i < jit->hash_size; i++) {

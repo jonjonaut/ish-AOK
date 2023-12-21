@@ -164,9 +164,9 @@ static inline void complex_lockt(lock_t *lock, int log_lock) {
 }
 
 static inline int trylock(lock_t *lock) {
-    atomic_l_lockf("trylock\0", 0);
+    //atomic_l_lockf("trylock\0", 0);
     int status = pthread_mutex_trylock(&lock->m);
-    atomic_l_unlockf();
+    //atomic_l_unlockf();
 #if LOCK_DEBUG
     if (!status) {
         lock->debug.file = file;

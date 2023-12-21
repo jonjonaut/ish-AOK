@@ -61,7 +61,7 @@ int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout
 #endif
     if (!timeout) { // We timeout anyway after fifteen seconds.  It appears the process wakes up briefly before returning here if there is nothing else pending.  This is kluge.  -mke
         struct timespec trigger_time;
-        trigger_time.tv_sec = 15;
+        trigger_time.tv_sec = 3;
         trigger_time.tv_nsec = 0;
         lock->wait4 = true;
         
@@ -107,7 +107,7 @@ int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout
         current->waiting_lock = NULL;
         unlock(&current->waiting_cond_lock);
     }
-    lock->wait4 = false;
+    //lock->wait4 = false;
     if(rc == ETIMEDOUT)
         return _ETIMEDOUT;
     return 0;

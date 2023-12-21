@@ -336,7 +336,8 @@ void signal_delivery_stop(int sig, struct siginfo_ *info) {
 
 void receive_signals(void) {  // Should this function have a check for critical_region_count? -mke
     //nanosleep(&lock_pause, NULL);
-    lock(&current->group->lock, 0);
+    pthread_mutex_trylock(&current->group->lock.m); // Lock it if not locked.  KLUDGE
+    //lock(&current->group->lock, 0);
     bool was_stopped = current->group->stopped;
     unlock(&current->group->lock);
 
@@ -680,10 +681,14 @@ int_t sys_rt_sigtimedwait(addr_t set_addr, addr_t info_addr, addr_t timeout_addr
     assert(current->waiting == 0);
     current->waiting = set;
     int err = 0;
+    int cnt = 0;
     TASK_MAY_BLOCK {
         do {
+            cnt++;
             err = wait_for(&current->pause, &current->sighand->lock, timeout_addr == 0 ? NULL : &timeout);
-        } while (err == 0);
+            if(cnt == 6)
+                printk("FUG\n");
+        } while ((err == 0) && (cnt < 6));
     }
     current->waiting = 0;
     if (err == _ETIMEDOUT) {
@@ -701,7 +706,16 @@ int_t sys_rt_sigtimedwait(addr_t set_addr, addr_t info_addr, addr_t timeout_addr
             break;
         }
     }
+    
     unlock(&current->sighand->lock);
+    
+    if(cnt == 6) { // KLUDGE
+        struct siginfo_ info;
+        if (user_put(info_addr, info))
+            return _EFAULT;
+        return info.sig;
+    }
+    
     if (!found)
         return _EINTR;
     struct siginfo_ info = sigqueue->info;
@@ -739,7 +753,8 @@ static int kill_group(pid_t_ pgid, dword_t sig) {
     }
     struct tgroup *tgroup;
     int err = _EPERM;
-    while((task_ref_cnt_get(current, 0)) || (locks_held_count(current))) { // Wait for now, task is in one or more critical sections, and/or has locks
+    //struct task foo = *current;
+    while((task_ref_cnt_get(current, 0) > 2) || (locks_held_count(current))) { // Wait for now, task is in one or more critical sections, and/or has locks
         nanosleep(&lock_pause, NULL);
     }
     list_for_each_entry(&pid->pgroup, tgroup, pgroup) {
