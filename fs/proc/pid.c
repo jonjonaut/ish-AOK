@@ -85,7 +85,9 @@ static int proc_pid_stat_show(struct proc_entry *entry, struct proc_data *buf) {
     // bunch of shit that can only be accessed by a debugger
     proc_printf(buf, "%lu ", 0l); // startcode
     proc_printf(buf, "%lu ", 0l); // endcode
+    mem_ref_cnt_mod(&task->mm->mem, 1);
     proc_printf(buf, "%lu ", task->mm ? task->mm->stack_start : 0);
+    mem_ref_cnt_mod(&task->mm->mem, -1);
     proc_printf(buf, "%lu ", 0l); // kstkesp
     proc_printf(buf, "%lu ", 0l); // kstkeip
 
@@ -279,7 +281,7 @@ static bool proc_pid_fd_readdir(struct proc_entry *entry, unsigned long *index, 
     lock(&task->files->lock, 0);
     while (*index < task->files->size && task->files->files[*index] == NULL)
         (*index)++;
-    fd_t f = (*index)++;
+    fd_t f = (int)(*index)++;
     bool any_left = (unsigned) f < task->files->size;
     unlock(&task->files->lock);
     proc_put_task(task);
@@ -307,21 +309,26 @@ static int proc_pid_fd_readlink(struct proc_entry *entry, char *buf) {
 
 static int proc_pid_exe_readlink(struct proc_entry *entry, char *buf) {
     struct task *task = proc_get_task(entry);
-    if ((task == NULL) || task->exiting == true)
+    if ((task == NULL) || task->exiting == true) {
         return _ESRCH;
+    }
+    task_ref_cnt_mod(task, 1);
     lock(&task->general_lock, 0);
+    task->mm->exefile->refcount++;
     int err = generic_getpath(task->mm->exefile, buf);
+    task->mm->exefile->refcount--;
     unlock(&task->general_lock);
+    task_ref_cnt_mod(task, -1);
     proc_put_task(task);
     return err;
 }
 
 static void proc_pid_task_getname(struct proc_entry *entry, char *buf) {
-    sprintf(buf, "%d", entry->pid);
+    snprintf(buf, sizeof(buf), "%d", entry->pid);
 }
 
 static int proc_pid_task_readlink(struct proc_entry *entry, char *buf) {
-    sprintf(buf, "/proc/%d", entry->pid);
+    snprintf(buf, sizeof(buf), "/proc/%d", entry->pid);
     return 0;
 }
 

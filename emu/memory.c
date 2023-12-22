@@ -72,7 +72,6 @@ void mem_destroy(struct mem *mem) {
     }
 
     free(mem->pgdir);
-    
     mem->pgdir = NULL; //mkemkemke Trying something here
     
     write_unlock_and_destroy(&mem->lock);

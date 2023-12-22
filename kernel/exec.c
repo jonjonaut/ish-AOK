@@ -153,7 +153,7 @@ static addr_t find_hole_for_elf(struct elf_header *header, struct prg_header *ph
 
 static intptr_t elf_exec(struct fd *fd, const char *file, struct exec_args argv, struct exec_args envp) {
     intptr_t err = 0;
-
+    
     // read the headers
     struct elf_header header;
     if ((err = read_header(fd, &header)) < 0)
@@ -161,7 +161,7 @@ static intptr_t elf_exec(struct fd *fd, const char *file, struct exec_args argv,
     struct prg_header *ph;
     if ((err = read_prg_headers(fd, header, &ph)) < 0)
         return err;
-
+    
     // look for an interpreter
     char *interp_name = NULL;
     struct fd *interp_fd = NULL;
@@ -175,19 +175,19 @@ static intptr_t elf_exec(struct fd *fd, const char *file, struct exec_args argv,
             err = _EINVAL;
             goto out_free_interp;
         }
-
+        
         interp_name = malloc(ph[i].filesize);
         err = _ENOMEM;
         if (interp_name == NULL)
             goto out_free_ph;
-
+        
         // read the interpreter name out of the file
         err = _EIO;
         if (fd->ops->lseek(fd, ph[i].offset, SEEK_SET) < 0)
             goto out_free_interp;
         if (fd->ops->read(fd, interp_name, ph[i].filesize) != ph[i].filesize)
             goto out_free_interp;
-
+        
         // open interpreter and read headers
         interp_fd = generic_open(interp_name, O_RDONLY, 0);
         if (IS_ERR(interp_fd)) {
@@ -203,7 +203,7 @@ static intptr_t elf_exec(struct fd *fd, const char *file, struct exec_args argv,
             goto out_free_interp;
         }
     }
-
+    
     // free the process's memory.
     // from this point on, if any error occurs the process will have to be
     // killed before it even starts. please don't be too sad about it, it's
@@ -213,6 +213,9 @@ static intptr_t elf_exec(struct fd *fd, const char *file, struct exec_args argv,
     // pointer before it's released and then try to lock it after it's
     // released.
     lock(&current->general_lock, 0);
+    while(current->mm->mem.reference.count) {
+        nanosleep(&lock_pause, NULL);
+    }
     mm_release(current->mm);
     task_set_mm(current, mm_new());
     unlock(&current->general_lock);

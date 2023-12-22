@@ -214,12 +214,14 @@ static inline void write_unlock_and_destroy(wrlock_t *lock) {
 }
 
 static inline void read_unlock_and_destroy(wrlock_t *lock) {
+    task_ref_cnt_mod(current, 1);
     atomic_l_lockf("ruad_lock", 0);
     if(trylockw(lock)) // It should be locked, but just in case.  Likely masking underlying issue.  -mke
         _read_unlock(lock);
     
     _lock_destroy(lock);
     atomic_l_unlockf();
+    task_ref_cnt_mod(current, -1);
 }
 
 static inline int trylockw(wrlock_t *lock) {

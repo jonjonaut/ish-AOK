@@ -20,7 +20,7 @@ static void halt_system(void);
 // Checks if a task's thread group can be exited by waiting for the task's reference count
 // to drop and checking if it holds any locks.
 static bool exit_tgroup(struct task *task) {
-    while((task_ref_cnt_get(task, 0) > 2) || (locks_held_count(task))) { // Wait for now, task is in one or more critical sections, and/or has locks
+    while((task_ref_cnt_get(task, 0) > 3) || (locks_held_count(task))) { // Wait for now, task is in one or more critical sections, and/or has locks
         nanosleep(&lock_pause, NULL);
     }
     struct tgroup *group = task->group;
@@ -172,11 +172,13 @@ noreturn void do_exit_group(int status) {
 
     unlock(&pids_lock);
     unlock(&group->lock);
-    struct task *foo = current; // debugging
-    if(current->pid <= MAX_PID) // abort if crazy.  -mke
-        do_exit(current, status);
+    struct task *safe = current; // debugging
+    if(safe->pid <= MAX_PID) {// abort if crazy.  -mke
+        task_ref_cnt_mod(safe, 1); // No need to decrement, since we aren't coming back.
+        do_exit(safe, status);
+    }
     
-    task_ref_cnt_mod(current, -1);
+    task_ref_cnt_mod(safe, -1);
     unlock(&pids_lock);  // Shouldn't get here
     pthread_exit(NULL);
 }
@@ -297,8 +299,9 @@ int do_wait(int idtype, pid_t_ id, struct siginfo_ *info, struct rusage_ *rusage
     if (options & ~(WNOHANG_|WUNTRACED_|WEXITED_|WCONTINUED_|WNOWAIT_|__WALL_))
         return _EINVAL;
 
+    struct task *safe = current; // Odd things seem to happeen to current sometimes, safe the pointer and use it
     complex_lockt(&pids_lock, 0);
-    task_ref_cnt_mod(current, 1);
+    task_ref_cnt_mod(safe, 1);
     int err;
     bool got_signal = false;
 
@@ -307,9 +310,9 @@ retry:
         // look for a zombie child
         bool no_children = true;
         struct task *parent;
-        list_for_each_entry(&current->group->threads, parent, group_links) {
+        list_for_each_entry(&safe->group->threads, parent, group_links) {
             struct task *task;
-            list_for_each_entry(&current->children, task, siblings) {
+            list_for_each_entry(&safe->children, task, siblings) {
                 if (!task_is_leader(task))
                     continue;
                 if (idtype == P_PGID_ && task->group->pgid != id)
@@ -348,7 +351,7 @@ retry:
         goto error;
 
     // no matching zombie found, wait for one
-    if (wait_for(&current->group->child_exit, &pids_lock, NULL)) {
+    if (wait_for(&safe->group->child_exit, &pids_lock, NULL)) {
         // maybe we got a SIGCHLD! go through the loop one more time to make
         // sure the newly exited process is returned in that case.
         got_signal = true;
@@ -358,12 +361,12 @@ retry:
 
     info->sig = SIGCHLD_;
 found_something:
-    task_ref_cnt_mod(current, -1);
+    task_ref_cnt_mod(safe, -1);
     unlock(&pids_lock);
     return 0;
 
 error:
-    task_ref_cnt_mod(current, -1);
+    task_ref_cnt_mod(safe, -1);
     unlock(&pids_lock);
     return err;
 }

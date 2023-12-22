@@ -42,6 +42,8 @@ void mm_retain(struct mm *mm) {
 }
 
 void mm_release(struct mm *mm) {
+    struct task* safe;
+    safe = current;
     if (--mm->refcount == 0) {
         if (mm->exefile != NULL)
             fd_close(mm->exefile);
@@ -51,7 +53,7 @@ void mm_release(struct mm *mm) {
         }
         
         mem_destroy(&mm->mem);
-        while(task_ref_cnt_get(current, 1) > 2) {  //FIXME: Should now unlock after mem_destroy
+        while(task_ref_cnt_get(safe, 1) > 3) {  //FIXME: Should now unlock after mem_destroy
             nanosleep(&lock_pause, NULL);
         }
         

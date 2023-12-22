@@ -124,8 +124,10 @@ dword_t get_count_of_blocked_tasks(void) {
     struct pid *pid_entry;
     complex_lockt(&pids_lock, 0);
     list_for_each_entry(&alive_pids_list, pid_entry, alive) {
-        if (pid_entry->task->io_block) {
-            res++;
+        if(pid_entry->task != NULL) { // It
+            if (pid_entry->task->io_block) {
+                res++;
+            }
         }
     }
     // task_ref_cnt_mod(current, -1);
