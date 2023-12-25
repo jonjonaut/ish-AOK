@@ -8,10 +8,10 @@
 #ifndef BatteryStatus_h
 #define BatteryStatus_h
 
-
-#endif /* BatteryStatus_h */
-// BatteryStatus.h
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 char* printBatteryStatus(int type);
+
+#endif /* BatteryStatus_h */
+
