@@ -1,5 +1,5 @@
 //
-//  DeviceInfo.m
+//  HostInfo.m
 //  iSH-AOK
 //
 //  Created by Michael Miller on 12/25/23.
@@ -11,6 +11,8 @@
 NSString* translateDeviceIdentifier(NSString *identifier) {
     NSDictionary<NSString *, NSString *> *deviceNames = @{
         // iPhones with 64-bit Processors
+        @"arm64": @"iDevice Simulator (ARM)",
+        @"x86_64": @"iDevice Simulator (x86_64)",
         @"iPhone6,1": @"iPhone 5S (GSM)",
         @"iPhone6,2": @"iPhone 5S (Global)",
         @"iPhone7,1": @"iPhone 6 Plus",
@@ -101,10 +103,10 @@ NSString* translateDeviceIdentifier(NSString *identifier) {
         @"iPad14,2": @"iPad mini 6th Gen (WiFi+Cellular)",
         @"iPad13,1": @"iPad Air 4th Gen (WiFi)",
         @"iPad13,2": @"iPad Air 4th Gen (WiFi+Cellular)",
-        @"iPad13,4": @"iPad Pro 11 inch 5th Gen",
-        @"iPad13,5": @"iPad Pro 11 inch 5th Gen",
-        @"iPad13,6": @"iPad Pro 11 inch 5th Gen",
-        @"iPad13,7": @"iPad Pro 11 inch 5th Gen",
+        @"iPad13,4": @"iPad Pro 11 inch 3rd Gen (WiFi)",
+        @"iPad13,5": @"iPad Pro 11 inch 3rd Gen (WiFi+Cellular US)",
+        @"iPad13,6": @"iPad Pro 11 inch 3rd Gen (WiFi+Cellular Global)",
+        @"iPad13,7": @"iPad Pro 11 inch 3rd Gen (WiFi+Cellular China)",
         @"iPad13,8": @"iPad Pro 12.9 inch 5th Gen",
         @"iPad13,9": @"iPad Pro 12.9 inch 5th Gen",
         @"iPad13,10": @"iPad Pro 12.9 inch 5th Gen",
@@ -128,7 +130,7 @@ NSString* translateDeviceIdentifier(NSString *identifier) {
 }
 
 
-char* printDeviceInfo(void) {
+char* printHostInfo(void) {
     struct utsname systemInfo;
     uname(&systemInfo);
     

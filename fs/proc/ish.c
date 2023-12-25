@@ -274,10 +274,10 @@ static int proc_ish_show_version(struct proc_entry *UNUSED(entry), struct proc_d
 }
 
 extern char* printBatteryStatus(int type);
-extern char* printDeviceInfo(void);
+extern char* printHostInfo(void);
 
-static int proc_ish_show_device_info(struct proc_entry *UNUSED(entry), struct proc_data *buf) {
-    proc_printf(buf, "%s", printDeviceInfo());
+static int proc_ish_show_host_info(struct proc_entry *UNUSED(entry), struct proc_data *buf) {
+    proc_printf(buf, "%s", printHostInfo());
     return 0;
 }
 
@@ -309,10 +309,11 @@ struct proc_children proc_ish_children = PROC_CHILDREN({
     {"BAT0_status", .show = proc_ish_show_battery_status},
     {"UIDevice", .show = proc_ish_show_uidevice},
     {"colors", .show = proc_ish_show_colors},
-    {"device_info", .show = proc_ish_show_device_info},
+    {"host_info", .show = proc_ish_show_host_info},
     {".defaults", S_IFDIR, .readdir = proc_ish_underlying_defaults_readdir},
     {"defaults", S_IFDIR, .readdir = proc_ish_defaults_readdir},
     {"documents", .show = proc_ish_show_documents},
+    {"host_info", .show = proc_ish_show_host_info},
     {"ips", .show = proc_ish_show_ips},
     {"version", .show = proc_ish_show_version},
 });
