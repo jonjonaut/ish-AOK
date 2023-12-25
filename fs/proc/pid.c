@@ -281,7 +281,7 @@ static bool proc_pid_fd_readdir(struct proc_entry *entry, unsigned long *index, 
     lock(&task->files->lock, 0);
     while (*index < task->files->size && task->files->files[*index] == NULL)
         (*index)++;
-    fd_t f = (*index)++;
+    fd_t f = (int)(*index)++;
     bool any_left = (unsigned) f < task->files->size;
     unlock(&task->files->lock);
     proc_put_task(task);

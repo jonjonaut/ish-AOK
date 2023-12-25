@@ -53,8 +53,8 @@ static int do_getrlimit32(int resource, struct rlimit32_ *rlimit32) {
         return err;
     STRACE(" {cur=%#x, max=%#x}", rlimit.cur, rlimit.max);
 
-    rlimit32->max = rlimit.max;
-    rlimit32->cur = rlimit.cur;
+    rlimit32->max = (unsigned)rlimit.max;
+    rlimit32->cur = (unsigned)rlimit.cur;
     return 0;
 }
 

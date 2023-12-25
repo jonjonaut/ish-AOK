@@ -23,7 +23,7 @@ struct mount *find_mount_and_trim_path(char *path) {
 bool contains_mount_point(const char *path) {
     struct mount *mount;
     list_for_each_entry(&mounts, mount, mounts) {
-        int n = strlen(path);
+        int n = (int)strlen(path);
         if (strncmp(path, mount->point, n) == 0 &&
                 (mount->point[n] == '\0' || mount->point[n] == '/'))
             return true;
@@ -79,7 +79,7 @@ struct fd *generic_openat(struct fd *at, const char *path_raw, int flags, int mo
             type = DEV_BLOCK;
         else
             type = DEV_CHAR;
-        err = dev_open(dev_major(stat.rdev), dev_minor(stat.rdev), type, fd);
+        err = dev_open(dev_major((int)stat.rdev), dev_minor((int)stat.rdev), type, fd);
         if (err < 0)
             goto error;
     }
@@ -259,7 +259,7 @@ ssize_t generic_readlinkat(struct fd *at, const char *path_raw, char *buf, size_
     struct mount *mount = find_mount_and_trim_path(path);
     err = _EINVAL;
     if (mount->fs->readlink)
-        err = mount->fs->readlink(mount, path, buf, bufsize);
+        err = (int)mount->fs->readlink(mount, path, buf, bufsize);
     mount_release(mount);
     return err;
 }
