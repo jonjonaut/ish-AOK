@@ -738,7 +738,7 @@ static int kill_group(pid_t_ pgid, dword_t sig) {
     }
     struct tgroup *tgroup;
     int err = _EPERM;
-    struct task* foo = current; // Debugging
+    //struct task* foo = current; // Debugging
     while((task_ref_cnt_get(current, 0) > 1) || (locks_held_count(current))) { // Wait for now, task is in one or more critical sections, and/or has locks
         nanosleep(&lock_pause, NULL);
     }

@@ -83,10 +83,6 @@ static inline void sigunwind_end(void) {
 void cond_init(cond_t *cond);
 void cond_destroy(cond_t *cond);
 //static bool is_signal_pending(lock_t *lock); // Not used externally to sync.c, doesn't eneed to be exposed
-int wait_for(cond_t *cond, lock_t *lock, struct timespec *timeout);
-int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout);
-void notify(cond_t *cond);
-void notify_once(cond_t *cond);
 void sigusr1_handler(int sig);
 bool current_is_valid(void);
 

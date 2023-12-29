@@ -328,7 +328,6 @@ void task_run_current(void) {
 }
 
 static void *task_thread(void *task) {
-    
     current = task;
     
     update_thread_name();
