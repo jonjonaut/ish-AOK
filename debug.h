@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WAIT_SLEEP 2000  // Was 25 for a long time.  -mke
-#define WAIT_MAX_UPPER 555000
+#define WAIT_SLEEP 200  // Was 25 for a long time.  -mke
+#define WAIT_MAX_UPPER 55500
 
 void ish_printk(const char *msg, ...);
 void ish_vprintk(const char *msg, va_list args);

@@ -358,16 +358,32 @@ static ssize_t iosfs_readlink(struct mount *mount, const char *path, char *buf, 
     NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
     NSURL *in_url = url_for_path_in_mount(mount, path);
 
-    NSError *error;
-    __block ssize_t size;
+    __block NSError *error = nil;
+    __block ssize_t size = -1;
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 
-    [coordinator coordinateReadingItemAtURL:in_url options:NSFileCoordinatorReadingWithoutChanges error:&error byAccessor:^(NSURL *url) {
-        size = realfs.readlink(mount, path_for_url_in_mount(mount, url, path), buf, bufsize);
-    }];
+    // Define a timeout duration
+    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC);
 
+    // Move the file coordination to a background queue
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [coordinator coordinateReadingItemAtURL:in_url options:NSFileCoordinatorReadingWithoutChanges error:&error byAccessor:^(NSURL *url) {
+            size = realfs.readlink(mount, path_for_url_in_mount(mount, url, path), buf, bufsize);
+            dispatch_semaphore_signal(sem);
+        }];
+    });
+
+    // Wait for the semaphore with a timeout
+    if (dispatch_semaphore_wait(sem, timeout) != 0) {
+        // Handle the timeout case
+        size = _ETIMEDOUT;
+    }
+
+    // Check and handle any error occurred during file coordination
     int posix_error = posixErrorFromNSError(error);
     return posix_error ? posix_error : size;
 }
+
 
 static int iosfs_getpath(struct fd *fd, char *buf) {
     return realfs.getpath(fd, buf);
@@ -416,17 +432,24 @@ static int iosfs_rmdir(struct mount *mount, const char *path) {
 }
 
 static int iosfs_stat(struct mount *mount, const char *path, struct statbuf *fake_stat) {
-    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
     NSURL *in_url = url_for_path_in_mount(mount, path);
-
-    NSError *error;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    __block NSError *error;
     __block int err;
 
-    [coordinator coordinateReadingItemAtURL:in_url options:NSFileCoordinatorReadingWithoutChanges error:&error byAccessor:^(NSURL *url) {
-        err = realfs.stat(mount, path_for_url_in_mount(mount, url, path), fake_stat);
-    }];
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [coordinator coordinateReadingItemAtURL:in_url options:NSFileCoordinatorReadingWithoutChanges error:&error byAccessor:^(NSURL *url) {
+            err = realfs.stat(mount, path_for_url_in_mount(mount, url, path), fake_stat);
+            dispatch_semaphore_signal(sem);
+        }];
+    });
 
-    return combine_error(error, err);
+    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+
+    dispatch_semaphore_wait(sem, timeout);
+    return posixErrorFromNSError(error) ?: err;
 }
 
 static int iosfs_fstat(struct fd *fd, struct statbuf *fake_stat) {
@@ -435,17 +458,25 @@ static int iosfs_fstat(struct fd *fd, struct statbuf *fake_stat) {
 }
 
 static int iosfs_utime(struct mount *mount, const char *path, struct timespec atime, struct timespec mtime) {
-    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
     NSURL *in_url = url_for_path_in_mount(mount, path);
-
-    NSError *error;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    __block NSError *error;
     __block int err;
 
-    [coordinator coordinateWritingItemAtURL:in_url options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:&error byAccessor:^(NSURL *url) {
-        err = realfs.utime(mount, path_for_url_in_mount(mount, url, path), atime, mtime);
-    }];
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [coordinator coordinateWritingItemAtURL:in_url options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:&error byAccessor:^(NSURL *url) {
+            err = realfs.utime(mount, path_for_url_in_mount(mount, url, path), atime, mtime);
+            dispatch_semaphore_signal(sem);
+        }];
+    });
+    
+    // Define a timeout of 5 seconds
+    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
 
-    return combine_error(error, err);
+    dispatch_semaphore_wait(sem, timeout);
+    return posixErrorFromNSError(error) ?: err;
 }
 
 static int iosfs_mkdir(struct mount *mount, const char *path, mode_t_ mode) {

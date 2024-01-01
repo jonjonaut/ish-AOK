@@ -85,6 +85,7 @@ inline void task_ref_cnt_mod(struct task *task, int value) { // value Should onl
     }
     
     if(task == NULL) {
+        return;
         if(current != NULL) {
             task = current;
         } else {
