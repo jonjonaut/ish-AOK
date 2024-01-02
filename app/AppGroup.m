@@ -15,22 +15,22 @@
 #define CSMAGIC_EMBEDDED_SIGNATURE 0xfade0cc0
 #define CSMAGIC_EMBEDDED_ENTITLEMENTS 0xfade7171
 
-struct cs_blob_index {
+struct __attribute__((packed)) cs_blob_index {
     uint32_t type;
     uint32_t offset;
 };
 
-struct cs_superblob {
+struct __attribute__((packed)) cs_superblob {
     uint32_t magic;
     uint32_t length;
     uint32_t count;
-    struct cs_blob_index index[];
+    struct cs_blob_index index[]; // This must be handled carefully since it's a flexible array member.
 };
 
-struct cs_entitlements {
+struct __attribute__((packed)) cs_entitlements {
     uint32_t magic;
     uint32_t length;
-    char entitlements[];
+    char entitlements[]; // This must be handled carefully since it's a flexible array member.
 };
 
 static NSDictionary *AppEntitlements(void) {
@@ -78,17 +78,22 @@ static NSDictionary *AppEntitlements(void) {
 
         NSData *entitlementsData = nil;
         for (uint32_t i = 0; i < ntohl(cs->count); i++) {
-            struct cs_entitlements *ents = (void *) ((char *) cs + ntohl(cs->index[i].offset));
+            uint32_t offset = ntohl(cs->index[i].offset);
+            const struct cs_entitlements *ents = (const struct cs_entitlements *)((const char *)cs + offset);
 
-            // Read the magic number in a way that does not assume alignment
             uint32_t magic;
             memcpy(&magic, &ents->magic, sizeof(uint32_t));
-            if (ntohl(ents->magic) == CSMAGIC_EMBEDDED_ENTITLEMENTS) {
-                entitlementsData = [NSData dataWithBytes:ents->entitlements length:ntohl(ents->length) - offsetof(struct cs_entitlements, entitlements)];
+            magic = ntohl(magic);
+
+            if (magic == CSMAGIC_EMBEDDED_ENTITLEMENTS) {
+                uint32_t length;
+                memcpy(&length, &ents->length, sizeof(uint32_t));
+                length = ntohl(length);
+
+                entitlementsData = [NSData dataWithBytes:ents->entitlements length:length - offsetof(struct cs_entitlements, entitlements)];
                 break; // Entitlements found
             }
         }
-        
         if (entitlementsData == nil)
             return;
 

@@ -21,7 +21,7 @@ static void handler(int signo, siginfo_t *sigaction, void *context) {
 
 static void gen_exception(void) {
     printk("WARNING: gen_exception in.\n");
-    *(int *)0 = 0;
+    *(volatile int *)0 = 0;
     printk("WARNING: gen_exception out.\n");
 }
 

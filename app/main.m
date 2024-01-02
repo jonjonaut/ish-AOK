@@ -19,7 +19,6 @@ int main(int argc, char * argv[]) {
 
         int retVal = 0;
         @try {
-            // Your existing setup code here
             retVal = UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
         }
         @catch (NSException *exception) {
