@@ -124,6 +124,8 @@ static int futex_load(struct futex *futex, dword_t *out) {
     return 0;
 }
 
+
+
 static int futex_wait(addr_t uaddr, dword_t val, struct timespec *timeout) {
     struct futex *futex = futex_get(uaddr);
     int err = 0;
@@ -146,6 +148,38 @@ static int futex_wait(addr_t uaddr, dword_t val, struct timespec *timeout) {
     futex_put(futex);
     STRACE("%d end futex(FUTEX_WAIT)", current->pid);
     return err;
+}
+
+static int futex_wait_time64(addr_t uaddr, dword_t val, struct timespec64 *timeout64) {
+    // Convert struct timespec64 to struct timespec if needed
+    struct timespec timeout;
+    timeout.tv_sec = (time_t)timeout64->tv_sec;
+    timeout.tv_nsec = (long)timeout64->tv_nsec;
+
+    // Call the existing futex_wait with the converted timespec
+    return futex_wait(uaddr, val, &timeout);
+}
+
+dword_t sys_futex_time64(addr_t uaddr, dword_t op, dword_t val, addr_t timeout_or_val2, addr_t uaddr2, dword_t val3) {
+    if (!(op & FUTEX_PRIVATE_FLAG_)) {
+        STRACE("!FUTEX_PRIVATE ");
+    }
+
+    // Check for FUTEX_WAIT_BITSET operation
+    if ((op & FUTEX_CMD_MASK_) == FUTEX_WAIT_BITSET_) {
+        STRACE("futex(FUTEX_WAIT_BITSET_TIME64, %#x, %d, 0x%x) = ...\n", uaddr, val, timeout_or_val2);
+
+        // Get the timespec64 from user space
+        struct timespec64 timeout64;
+        if (user_get(timeout_or_val2, timeout64))
+            return _EFAULT;
+
+        // Call the futex_wait_time64 function
+        return futex_wait_time64(uaddr, val, &timeout64);
+    }
+
+    // Handle other futex operations (possibly by calling sys_futex)
+    return sys_futex(uaddr, op, val, timeout_or_val2, uaddr2, val3);
 }
 
 static int futex_wakelike(int op, addr_t uaddr, dword_t wake_max, dword_t requeue_max, addr_t requeue_addr) {

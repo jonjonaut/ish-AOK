@@ -56,7 +56,7 @@ int main(int argc, char *const argv[]) {
     sa.sa_flags = SA_SIGINFO;
 
     if(sigaction(/*SIGBUS*/SIGSEGV, &sa, NULL) == -1) {
-        printf("sigaction fails.\n");
+        printk("sigaction fails.\n");
         return 0;
     }
 

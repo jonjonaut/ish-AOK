@@ -9,6 +9,8 @@
 
 extern bool isGlibC;
 
+extern dword_t sys_futex_time64(addr_t uaddr, dword_t op, dword_t val, addr_t timeout_or_val2, addr_t uaddr2, dword_t val3);
+
 dword_t syscall_stub(void) {
     STRACE("syscall_stub()");
     // I should probably do a prink here.  Not sure why I removed it
@@ -276,6 +278,7 @@ syscall_t syscall_table[] = {
     [407] = (syscall_t) sys_clock_nanosleep_time64, // clock_nanosleep_time64
     [412] = (syscall_t) sys_utimensat64, // utimensat_time64
     [414] = (syscall_t) sys_ppoll_time64,
+    [422] = (syscall_t) sys_futex_time64,
     [424] = (syscall_t) syscall_stub, // pidfd_send_signal?
     [436] = (syscall_t) syscall_stub,
     [439] = (syscall_t) sys_faccessat, // faccessat2

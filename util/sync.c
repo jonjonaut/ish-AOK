@@ -59,41 +59,20 @@ int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout
         current->waiting_lock = lock;
         unlock(&current->waiting_cond_lock);
     }
+    
     int rc = 0;
-    char saveme[16];
-    strncpy(saveme, lock->lname, 16); // Save for later
-#if LOCK_DEBUG
-    struct lock_debug lock_tmp = lock->debug;
-    lock->debug = (struct lock_debug) { .initialized = lock->debug.initialized };
-#endif
-    if (!timeout) { // We timeout anyway after fifteen seconds.  It appears the process wakes up briefly before returning here if there is nothing else pending.  This is KLUGE.  -mke
-        struct timespec trigger_time;
-        trigger_time.tv_sec = 15;
-        trigger_time.tv_nsec = 0;
-        lock->wait4 = true;
-        
-        if(current->uid == 501) {  // This is here for testing of the process lockup issue.  -mke
-            rc = pthread_cond_timedwait_relative_np(&cond->cond, &lock->m, &trigger_time);
-            // if((rc == ETIMEDOUT) && current->parent != NULL) {
-            if(rc == ETIMEDOUT) {
-                if(current->children.next != NULL) {
-                    notify(cond);  // This is a terrible hack that seems to avoid processes getting stuck.
-                    // return 0;
-                }
-            }
-            
-            rc = 0;
-            
-        } else {
-            pthread_cond_wait(&cond->cond, &lock->m);
-        }
+
+    if (!timeout) {
+        // Standard wait on the condition variable without a timeout
+        rc = pthread_cond_wait(&cond->cond, &lock->m);
     } else {
+        // Timed wait on the condition variable
 #if __linux__
         struct timespec abs_timeout;
         clock_gettime(CLOCK_MONOTONIC, &abs_timeout);
         abs_timeout.tv_sec += timeout->tv_sec;
         abs_timeout.tv_nsec += timeout->tv_nsec;
-        if (abs_timeout.tv_nsec > 1000000000) {
+        if (abs_timeout.tv_nsec >= 1000000000) {
             abs_timeout.tv_sec++;
             abs_timeout.tv_nsec -= 1000000000;
         }
@@ -101,12 +80,9 @@ int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout
 #elif __APPLE__
         rc = pthread_cond_timedwait_relative_np(&cond->cond, &lock->m, timeout);
 #else
-#error Unimplemented pthread_cond_wait relative timeout.
+#error "Platform not supported for pthread_cond_timedwait."
 #endif
     }
-#if LOCK_DEBUG
-    lock->debug = lock_tmp;
-#endif
 
     if(current) {
         lock(&current->waiting_cond_lock, 0);
@@ -115,9 +91,14 @@ int wait_for_ignore_signals(cond_t *cond, lock_t *lock, struct timespec *timeout
         unlock(&current->waiting_cond_lock);
     }
     lock->wait4 = false;
-    if(rc == ETIMEDOUT)
+
+    // Convert the return code from pthreads to the application-specific format
+    if (rc == ETIMEDOUT)
         return _ETIMEDOUT;
-    return 0;
+    else if (rc == 0)
+        return 0;
+    else
+        return _EINTR;  // or an appropriate error code for other errors
 }
 
 void notify(cond_t *cond) {

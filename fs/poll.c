@@ -342,7 +342,8 @@ void poll_destroy(struct poll *poll) {
         free(poll_fd);
     }
           
-    while(task_ref_cnt_get(current, 0) > 1) {
+    while(task_ref_cnt_get(current, 0) > 2) {
+        struct task* foo = current;
         nanosleep(&lock_pause, NULL);
     }
     
