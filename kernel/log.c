@@ -30,67 +30,81 @@ static lock_t log_lock = LOCK_INITIALIZER;
 #define SYSLOG_ACTION_SIZE_UNREAD_ 9
 #define SYSLOG_ACTION_SIZE_BUFFER_ 10
 
-static size_t syslog_read(addr_t buf_addr, size_t len, int flags, char* buffer, size_t buffer_size) {
-    if (len == 0 || buffer_size == 0)
+static size_t syslog_read(addr_t buf_addr, size_t len, int flags) {
+    if (len < 0)
         return _EINVAL;
-
-    // Limit the read length to the size of the passed buffer
-    if (len > buffer_size - 1)
-        len = buffer_size - 1;
-
-    // Read from the log buffer
-    size_t read_len = fifo_read(&log_buf, buffer, len, flags);
-    buffer[read_len] = '\0'; // Ensure null-termination
-
-    // Write line by line to the user space, splitting on '\n'
-    addr_t pointer = buf_addr;
-    char *token = strtok(buffer, "\n");
+    if (flags & FIFO_LAST) {
+        if ((size_t) len > log_max_since_clear)
+            len = log_max_since_clear;
+    } else {
+        if ((size_t) len > fifo_capacity(&log_buf))
+            len = fifo_capacity(&log_buf);
+    }
+    char *buf = malloc(len + 1);
+    fifo_read(&log_buf, buf, len, flags);
+    
+    // Here we will split on \n and do one entry per line
+    // Keep printing tokens while one of the
+    // delimiters present
+    addr_t pointer = buf_addr; // Where we are in the buffer
+    char *token = strtok(buf, "\n"); // Get the first line
+    
+    if(user_write(pointer, "\n", 1)) { // Positive return value = fail
+        free(buf);
+        return _EFAULT;
+    }
+    
+    pointer++;
+    
     while (token != NULL) {
         size_t length = strlen(token);
-        if (user_write(pointer, token, length)) // Check for write failure
+        if(user_write(pointer, token, length)) { // Positive return value = fail
+            free(buf);
             return _EFAULT;
+        }
+           
         pointer += length;
-
-        if (user_write(pointer, "\n", 1)) // Check for write failure
+        
+        if(user_write(pointer, "\n", 1)) { // Positive return value = fail
+            free(buf);
             return _EFAULT;
+        }
+        
         pointer++;
-
-        if (pointer < (buf_addr + len - 1))
-            token = strtok(NULL, "\n");
-        else
-            break; // Reached the end of the buffer
+        if(pointer < (buf_addr + (len -1))) {
+            token = strtok(NULL, "\n");  // Grab next token, deal with when back at top of while loop. -mke
+        } else {
+            token = NULL;
+        }
     }
 
-    return pointer - buf_addr; // Return the number of bytes written
+    free(buf);
+    
+    return len;
 }
 
 static size_t do_syslog(int type, addr_t buf_addr, int_t len) {
-    // Define a buffer size based on your requirements
-    const size_t BUFFER_SIZE = 8192;
-    char buffer[BUFFER_SIZE];
-
+    int res;
     switch (type) {
         case SYSLOG_ACTION_READ_:
-            return syslog_read(buf_addr, len, 0, buffer, BUFFER_SIZE);
+            return syslog_read(buf_addr, len, 0);
         case SYSLOG_ACTION_READ_ALL_:
-            return syslog_read(buf_addr, len, FIFO_LAST | FIFO_PEEK, buffer, BUFFER_SIZE);
+            return syslog_read(buf_addr, len, FIFO_LAST | FIFO_PEEK);
 
-        case SYSLOG_ACTION_READ_CLEAR_: {
-                size_t res = syslog_read(buf_addr, len, FIFO_LAST | FIFO_PEEK, buffer, BUFFER_SIZE);
-                if (res < 0)
-                    return res;
-                // fall through to clear
-            }
+        case SYSLOG_ACTION_READ_CLEAR_:
+            res = (int)syslog_read(buf_addr, len, FIFO_LAST | FIFO_PEEK);
+            if (res < 0)
+                return res;
+            fallthrough;
         case SYSLOG_ACTION_CLEAR_:
             log_max_since_clear = 0;
             return 0;
 
         case SYSLOG_ACTION_SIZE_UNREAD_:
-            return fifo_size(&log_buf);
+            return (int)fifo_size(&log_buf);
         case SYSLOG_ACTION_SIZE_BUFFER_:
-            return fifo_capacity(&log_buf);
+            return (int)fifo_capacity(&log_buf);
 
-        // Other actions remain unchanged
         case SYSLOG_ACTION_CLOSE_:
         case SYSLOG_ACTION_OPEN_:
         case SYSLOG_ACTION_CONSOLE_OFF_:
@@ -101,7 +115,6 @@ static size_t do_syslog(int type, addr_t buf_addr, int_t len) {
             return _EINVAL;
     }
 }
-
 size_t sys_syslog(int_t type, addr_t buf_addr, int_t len) {
     lock(&log_lock, 0);
     size_t retval = do_syslog(type, buf_addr, len);
@@ -189,7 +202,7 @@ _Noreturn void die(const char *msg, ...);
 void die(const char *msg, ...) {
     va_list args;
     va_start(args, msg);
-    char buf[8192];
+    char buf[4096];
     vsprintf(buf, msg, args);
     die_handler(buf);
     abort();  

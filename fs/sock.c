@@ -332,6 +332,7 @@ int_t sys_bind(fd_t sock_fd, addr_t sockaddr_addr, uint_t sockaddr_len) {
     if (sock == NULL)
         return _EBADF;
     struct sockaddr_max_ sockaddr;
+    memset(&sockaddr, 0, sizeof(sockaddr));
     struct inode_data *inode = NULL;
     int err = sockaddr_read_bind(sockaddr_addr, &sockaddr, &sockaddr_len, sock);
     if (err < 0)
@@ -360,6 +361,8 @@ int_t sys_connect(fd_t sock_fd, addr_t sockaddr_addr, uint_t sockaddr_len) {
     if (sock == NULL)
         return _EBADF;
     struct sockaddr_max_ sockaddr;
+    memset(&sockaddr, 0, sizeof(sockaddr));
+
     int err = sockaddr_read(sockaddr_addr, &sockaddr, &sockaddr_len);
     if (err < 0)
         return err;
@@ -588,6 +591,8 @@ int_t sys_sendto(fd_t sock_fd, addr_t buffer_addr, dword_t len, dword_t flags, a
     if (real_flags < 0)
         goto error;
     struct sockaddr_max_ sockaddr;
+    memset(&sockaddr, 0, sizeof(sockaddr));
+
     if (sockaddr_addr) {
         err = sockaddr_read(sockaddr_addr, &sockaddr, &sockaddr_len);
         if (err < 0)
@@ -1151,6 +1156,8 @@ static void sock_translate_err(struct fd *fd, int *err) {
     // posix. so instead, detect this and return ECONNRESET.
     if (*err == _ENOTCONN) {
         struct sockaddr addr;
+        memset(&addr, 0, sizeof(addr));
+
         socklen_t len = sizeof(addr);
         if (getpeername(fd->real_fd, &addr, &len) < 0 && errno == EINVAL) {
             *err = _ECONNRESET;
